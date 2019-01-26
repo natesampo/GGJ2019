@@ -210,10 +210,13 @@ public class Game {
 				for(int x=0; x<s.length(); x++) {
 					char c = s.charAt(x);
 					switch(c) {
-					case 'E': sprites.add(new Ship(x, y, 0, 1)); break;
+					case 'E': sprites.add(new Ship(x, y, 0, 1));
+					sprites.add(new Tile(x, y));
+					break;
 					case 'S':
 					player = new Ship(x, y, 0, 0);
 					sprites.add(player);
+					sprites.add(new Tile(x, y));
 					break;
 					//case 'm': sprites.add(new Ship(x, y, 0, 1)); break;
 					//case 'm': sprites.add(new Ship(x, y, 0, 1)); break;
