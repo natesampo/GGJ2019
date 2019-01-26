@@ -24,7 +24,7 @@ public class Ship extends GameObject {
 		yreal += Math.signum(y-yreal)*Math.max(Math.abs(y-yreal)*kspeed, minspeed);
 		if(Math.abs(xreal-x)<minspeed) xreal = x;
 		if(Math.abs(yreal-y)<minspeed) yreal = y;
-		this.sprite.animate(Animations.RIGHT, dt);
+		this.sprite.animate(Animations.SHIP, dt, heading/90);
 	}
 	
 	public boolean moveLeft() {
@@ -56,11 +56,19 @@ public class Ship extends GameObject {
 	}
 	
 	public void translate(int dx, int dy) {
-		xreal = x;
-		yreal = y;
+//		xreal = x;
+//		yreal = y;
 		x += dx;
 		y += dy;
+//		if(collide(x, y)) {
+//			x -= dx;
+//			y -= dy;
+//		}
 	}
+//	
+//	public boolean collide(int x, int y) {
+//		Game.sprites
+//	}
 	
 	/**
 	 * Renders the sprite

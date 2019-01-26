@@ -39,7 +39,7 @@ public class Game {
 	public int delete_this_variable = 0;
 	public double test_local_time = 0;
 	
-	public ArrayList<GameObject> sprites = new ArrayList<GameObject>();
+	public static ArrayList<GameObject> sprites = new ArrayList<GameObject>();
 	
 	public static void main(String[] args) {
 		Game game = new Game();
