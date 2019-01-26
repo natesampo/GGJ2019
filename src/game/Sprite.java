@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class Sprite {
 	
 	public int framerate = Game.FRAME_RATE, width, height, duration;
-	private static HashMap<GameObject.Animations, SpriteSheet> animations = new HashMap<GameObject.Animations, SpriteSheet>();
+	private static HashMap<GameObject.Animations, SpriteSheet[]> animations = new HashMap<GameObject.Animations, SpriteSheet[]>();
 	private Image frame;
 	private GameObject.Animations state;
 	private double t;
@@ -26,7 +26,18 @@ public class Sprite {
 		if(animations.containsKey(name)) {
 			return; // duplicate detection
 		}
-		animations.put(a, new SpriteSheet(i>0?a.filename:name+".png", a.columns, a.frames));
+		if(name.contains("Ship")) {
+			SpriteSheet[] all = new SpriteSheet[4];
+			all[0] = new SpriteSheet(i>0?a.filename:name+"Right.png", a.columns, a.frames);
+			all[1] = new SpriteSheet(i>0?a.filename:name+"Up.png", a.columns, a.frames);
+			all[2] = new SpriteSheet(i>0?a.filename:name+"Left.png", a.columns, a.frames);
+			all[3] = new SpriteSheet(i>0?a.filename:name+"Down.png", a.columns, a.frames);
+			animations.put(a, all);
+			return;
+		}
+		SpriteSheet[] all = new SpriteSheet[1];
+		all[0] = new SpriteSheet(i>0?a.filename:name+".png", a.columns, a.frames);
+		animations.put(a, all);
 	
 	}
 	
@@ -36,7 +47,7 @@ public class Sprite {
 	 * @param dt - the time step in seconds
 	 * @return true if the animation completed
 	 */
-	public boolean animate(GameObject.Animations state, double dt) {
+	public boolean animate(GameObject.Animations state, double dt, int index) {
 		if(!animations.containsKey(state)) {
 			System.err.println("Animation not found: "+state);
 			return false; // Error detection
@@ -46,7 +57,12 @@ public class Sprite {
 			t = 0;
 			this.state = state; // Change animations
 		}
-		SpriteSheet animation = animations.get(state);
+		SpriteSheet[] all = animations.get(state);
+		if(all.length<=index) {
+			System.err.println("Animation index not found: "+state);
+			return false;
+		}
+		SpriteSheet animation = all[index];
 		width = animation.width;
 		height = animation.height;
 		duration = animation.frames*framerate;
@@ -57,6 +73,10 @@ public class Sprite {
 		} else {
 			return false;
 		}
+	}
+	
+	public boolean animate(GameObject.Animations state, double dt) {
+		return animate(state, dt, 0);
 	}
 	
 	public void offset(int frames) {
