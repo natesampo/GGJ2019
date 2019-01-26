@@ -35,6 +35,7 @@ public class Game {
 
 	public boolean yourTurn = false;
 	public boolean lock = false;
+	public boolean keyLock = false;
 
 	public int delete_this_variable = 0;
 	public double test_local_time = 0;
@@ -75,11 +76,13 @@ public class Game {
 
 			@Override
 			public void keyReleased(KeyEvent ke) {
-				if(yourTurn) takeTurn(ke);
+				keyLock = false;
 			}
 
 			@Override
 			public void keyPressed(KeyEvent ke) {
+				if(yourTurn && !keyLock) takeTurn(ke);
+				keyLock = true;
 			}
 		});
 
