@@ -89,9 +89,7 @@ public class Game {
 				}
 			}
 		});
-		player = new Ship(5, 5, 0, 0);
-		player.sprite.offset(2);
-		sprites.add(player);
+		
 		sprites.add(new Ship(5, 6, 0, 0));
 		sprites.add(new Ship(0, 0, 0, 0));
 		AudioPlayer music = new AudioPlayer("OpenSource.wav");
@@ -213,6 +211,15 @@ public class Game {
 					char c = s.charAt(x);
 					switch(c) {
 					case 'E': sprites.add(new Ship(x, y, 0, 1)); break;
+					case 'S':
+					player = new Ship(x, y, 0, 0);
+					sprites.add(player);
+					break;
+					//case 'm': sprites.add(new Ship(x, y, 0, 1)); break;
+					//case 'm': sprites.add(new Ship(x, y, 0, 1)); break;
+					//case 'm': sprites.add(new Ship(x, y, 0, 1)); break;
+					//case 'E': sprites.add(new Ship(x, y, 0, 1)); break;
+					//case 'E': sprites.add(new Ship(x, y, 0, 1)); break;
 					default: sprites.add(new Tile(x, y)); break;
 					}
 				}
