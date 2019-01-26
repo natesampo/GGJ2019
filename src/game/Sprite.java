@@ -51,9 +51,9 @@ public class Sprite {
 		if(name.contains("Fire")) {
 			SpriteSheet[] all = new SpriteSheet[4];
 			all[0] = new SpriteSheet(i>0?a.filename:name+"LeftStarboard.png", a.columns, a.frames);
-			all[1] = new SpriteSheet(i>0?a.filename:name+"Up.png", a.columns, a.frames);
+			all[1] = new SpriteSheet(i>0?a.filename:name+"UpStarboard.png", a.columns, a.frames);
 			all[2] = new SpriteSheet(i>0?a.filename:name+"LeftPort.png", a.columns, a.frames);
-			all[3] = new SpriteSheet(i>0?a.filename:name+"Down.png", a.columns, a.frames);
+			all[3] = new SpriteSheet(i>0?a.filename:name+"DownPort.png", a.columns, a.frames);
 			animations.put(a, all);
 			return;
 		}

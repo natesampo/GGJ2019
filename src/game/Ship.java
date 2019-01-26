@@ -5,7 +5,7 @@ import java.awt.Graphics;
 public class Ship extends GameObject {
 	public int heading, type;
 	public double bounceX = 0, bounceY = 0;
-	
+	public int health = 1;
 	
 	/**
 	 * Creates a new ship. 
@@ -19,7 +19,11 @@ public class Ship extends GameObject {
 		this.heading = heading;
 		this.type = type;
 		this.z = 2;
-		if(type==0) this.z = 3;
+		this.health = type;
+		if(type==0) {
+			this.z = 3;
+			this.health = 3;
+		}
 		Game.grid[x][y] = this;
 	}
 
@@ -114,6 +118,11 @@ public class Ship extends GameObject {
 	}
 	
 	public void hit() {
+		health--;
+		if(health <= 0) {
+			Game.sprites.remove(this);
+			Game.grid[x][y] = null;
+		}
 		System.out.println("BOOM!!!");
 	}
 	
@@ -128,6 +137,9 @@ public class Ship extends GameObject {
 			bounceY = Math.signum(dy)*0.5;
 			x -= dx;
 			y -= dy;
+			if(Game.grid[x][y] instanceof Tile) {
+				health--;
+			}
 		}
 		Game.grid[x][y] = this;
 	}
