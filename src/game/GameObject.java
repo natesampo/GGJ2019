@@ -9,6 +9,8 @@ public abstract class GameObject implements Comparable<GameObject> {
 	
 	protected Sprite sprite;
 	public int x, y;
+	public double xreal, yreal;
+	public double kspeed = 1;
 	public int SCALE = 64;
 	public int XOFFSET = 32, YOFFSET = 64;
 	public boolean visible = true;
@@ -18,7 +20,8 @@ public abstract class GameObject implements Comparable<GameObject> {
 	 */
 	public enum Animations {
 		HYDRA("hydra", 4, 4),
-		WATER("Water", 1, 1);
+		WATER("Water", 1, 1),
+		RIGHT("ShipRight", 1, 1);
 		
 		public String filename;
 		public int columns;
@@ -39,6 +42,8 @@ public abstract class GameObject implements Comparable<GameObject> {
 		this.sprite = new Sprite();
 		this.x = x;
 		this.y = y;
+		this.xreal = x;
+		this.yreal = y;
 	}
 	
 	/**
@@ -54,9 +59,9 @@ public abstract class GameObject implements Comparable<GameObject> {
 	 */
 	public void draw(Graphics g) {
 		if(!visible) return;
-		g.translate(x*SCALE+SCALE/2+XOFFSET, y*SCALE+SCALE/2+YOFFSET);
+		g.translate((int)(xreal*SCALE)+SCALE/2+XOFFSET, (int)(yreal*SCALE)+SCALE/2+YOFFSET);
 		sprite.draw(g, this);
-		g.translate(-x*SCALE-SCALE/2-XOFFSET, -y*SCALE-SCALE/2-YOFFSET);
+		g.translate(-(int)(xreal*SCALE)-SCALE/2-XOFFSET, -(int)(yreal*SCALE)-SCALE/2-YOFFSET);
 	}
 	
 	@Override

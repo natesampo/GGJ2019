@@ -20,7 +20,9 @@ public class Ship extends GameObject {
 
 	@Override
 	public void update(Game game, double dt) {
-		this.sprite.animate(Animations.HYDRA, dt);
+		xreal += (x-xreal)*kspeed;
+		yreal += (y-yreal)*kspeed;
+		this.sprite.animate(Animations.RIGHT, dt);
 	}
 	
 	public boolean moveLeft() {
