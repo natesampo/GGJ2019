@@ -18,6 +18,9 @@ public class Ship extends GameObject {
 		super(x, y);
 		this.heading = heading;
 		this.type = type;
+		this.z = 2;
+		if(type==0) this.z = 3;
+		Game.grid[x][y] = this;
 	}
 
 	@Override
@@ -37,7 +40,13 @@ public class Ship extends GameObject {
 			if(Math.abs(xreal-x)<minspeed) xreal = x;
 			if(Math.abs(yreal-y)<minspeed) yreal = y;
 		}
-		this.sprite.animate(Animations.SHIP, dt, heading/90);
+		switch(type) {
+			case 0: this.sprite.animate(Animations.SHIP, dt, heading/90); break;
+			case 1: this.sprite.animate(Animations.ENEMY1, dt, heading/90); break;
+			case 2: this.sprite.animate(Animations.ENEMY2, dt, heading/90); break;
+			case 3: this.sprite.animate(Animations.ENEMY3, dt, heading/90); break;
+		}
+		
 	}
 	
 	public boolean moveLeft() {
@@ -69,10 +78,47 @@ public class Ship extends GameObject {
 	}
 	
 	public void shoot() {
-		Game.sprites.add(new Boom(x, y, heading));
+		Game.sprites.add(new Boom(x, y, heading, true));
+		Game.sprites.add(new Boom(x, y, heading, false));
+		if(heading%180==90) { // horizontal
+			for(int i=x+1;i<Game.W;i++) {
+				if(getHit(i,y)) break;
+			}
+			for(int i=x-1;i>=0;i--) {
+				if(getHit(i,y)) break;
+			}
+		} else { // vertical
+			for(int i=y+1;i<Game.H;i++) {
+				if(getHit(x,i)) break;
+			}
+			for(int i=y-1;i>=0;i--) {
+				if(getHit(x,i)) break;
+			}
+		}
+	}
+	
+	public boolean getHit(int x, int y) {
+		if(Game.grid[x][y] != null) {
+			GameObject obj = Game.grid[x][y];
+			if(obj instanceof Tile) {
+				if(((Tile)obj).type == 2) {
+					return true;
+				}
+			}
+			if(obj instanceof Ship) {
+				((Ship) obj).hit();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void hit() {
+		System.out.println("BOOM!!!");
 	}
 	
 	public void translate(int dx, int dy) {
+		Game.grid[x][y] = null;
 //		xreal = x;
 //		yreal = y;
 		x += dx;
@@ -83,38 +129,21 @@ public class Ship extends GameObject {
 			x -= dx;
 			y -= dy;
 		}
+		Game.grid[x][y] = this;
 	}
 	
 	public boolean collide(int x, int y) {
-		for(GameObject obj:Game.sprites) {
-			if(obj.x == x && obj.y == y) {
-				if(obj instanceof Tile) {
-					switch(((Tile)obj).type) {
-						case 2: return true;
-					}
+		if(Game.grid[x][y]!=null) {
+			GameObject obj = Game.grid[x][y];
+			if(obj instanceof Tile) {
+				switch(((Tile)obj).type) {
+					case 2: return true;
 				}
+			}
+			if(obj instanceof Ship) {
+				return true;
 			}
 		}
 		return false;
 	}
-	
-	/**
-	 * Renders the sprite
-	 * @param g - the Graphics context with appropriate translation and scaling
-	 */
-//	@Override
-//	public void draw(Graphics g) {
-//		Graphics2D g2d = (Graphics2D)g;
-//		g2d.rotate(Math.toRadians(degrees));
-//		super.draw(g);
-//	}
-	
-	@Override
-    public int compareTo(GameObject obj) {
-		if(obj instanceof Tile) return 1;
-        if(this.y==obj.y) {
-        	return 0;
-        }
-        return this.y>obj.y?1:-1;
-    }
 }

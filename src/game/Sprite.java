@@ -18,6 +18,7 @@ public class Sprite {
 	private GameObject.Animations state;
 	private double t;
 	private int offset = 0;
+	public boolean flipX = false, flipY = false;
 	
 	/**
 	 * Adds a sprite sheet to the dictionary
@@ -30,6 +31,24 @@ public class Sprite {
 			return; // duplicate detection
 		}
 		if(name.contains("Ship")) {
+			SpriteSheet[] all = new SpriteSheet[4];
+			all[0] = new SpriteSheet(i>0?a.filename:name+"Right.png", a.columns, a.frames);
+			all[1] = new SpriteSheet(i>0?a.filename:name+"Up.png", a.columns, a.frames);
+			all[2] = new SpriteSheet(i>0?a.filename:name+"Left.png", a.columns, a.frames);
+			all[3] = new SpriteSheet(i>0?a.filename:name+"Down.png", a.columns, a.frames);
+			animations.put(a, all);
+			return;
+		}
+		if(name.contains("Enemy")) {
+			SpriteSheet[] all = new SpriteSheet[4];
+			all[0] = new SpriteSheet(i>0?a.filename:name+"Right.png", a.columns, a.frames);
+			all[1] = new SpriteSheet(i>0?a.filename:name+"Up.png", a.columns, a.frames);
+			all[2] = new SpriteSheet(i>0?a.filename:name+"Left.png", a.columns, a.frames);
+			all[3] = new SpriteSheet(i>0?a.filename:name+"Down.png", a.columns, a.frames);
+			animations.put(a, all);
+			return;
+		}
+		if(name.contains("Fire")) {
 			SpriteSheet[] all = new SpriteSheet[4];
 			all[0] = new SpriteSheet(i>0?a.filename:name+"Right.png", a.columns, a.frames);
 			all[1] = new SpriteSheet(i>0?a.filename:name+"Up.png", a.columns, a.frames);
@@ -76,7 +95,7 @@ public class Sprite {
 			return false;
 		}
 	}
-	
+
 	public boolean animate(GameObject.Animations state, double dt) {
 		return animate(state, dt, 0);
 	}
@@ -92,6 +111,6 @@ public class Sprite {
 	 */
 	public void draw(Graphics g, GameObject object) {
 		if(frame==null||state==null) return; // error detection
-		g.drawImage(frame, -width/2, -height/2, width, height, null);
+		g.drawImage(frame, -width/2*(flipX?-1:1), -height/2*(flipY?-1:1), width*(flipX?-1:1), height*(flipY?-1:1), null);
 	}
 }

@@ -36,6 +36,7 @@ public class Game {
 	public boolean yourTurn = false;
 	public boolean lock = false;
 	public int keyLock = 0;
+	public static GameObject[][] grid = new GameObject[W][H];
 
 	public int delete_this_variable = 0;
 	public double test_local_time = 0;
@@ -214,13 +215,9 @@ public class Game {
 	}
 
 	public void loadLevel(String name) {
-		// for(int x=0; x<W; x++) {
-		// for(int y=0; y<H; y++) {
-		// sprites.add(new Tile(x,y));
-		// }
-		// }
 		try {
 			Scanner in = new Scanner(new FileReader(name + ".txt"));
+			grid = new GameObject[W][H];
 			int y = 0;
 			while (in.hasNext()) {
 				String s = in.nextLine();
@@ -240,6 +237,7 @@ public class Game {
 						sprites.add(new Tile(x, y, 1));
 						break;
 					case 'x':
+						sprites.add(new Tile(x, y, 1));
 						sprites.add(new Tile(x, y, 2));
 						break;
 					case 'X':

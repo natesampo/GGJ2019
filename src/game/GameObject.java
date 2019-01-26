@@ -8,7 +8,7 @@ import java.awt.Graphics;
 public abstract class GameObject implements Comparable<GameObject> {
 	
 	protected Sprite sprite;
-	public int x, y;
+	public int x, y, z=1;
 	public double xreal, yreal;
 	public double kspeed = .2, minspeed = .02;
 	public int SCALE = 64;
@@ -23,7 +23,10 @@ public abstract class GameObject implements Comparable<GameObject> {
 		WATER("Water", 8, 8),
 		SHIP("Ship", 1, 1),
 		ROCK1("Rock1", 1, 1),
-		BOOM("Boom", 4, 4);
+		BOOM("Boom", 4, 4),
+		ENEMY1("Enemy1", 1, 1),
+		ENEMY2("Enemy2", 1, 1),
+		ENEMY3("Enemy3", 1, 1);
 		
 		public String filename;
 		public int columns;
@@ -68,8 +71,17 @@ public abstract class GameObject implements Comparable<GameObject> {
 	
 	@Override
     public int compareTo(GameObject obj) {
+		if(obj.z == 0) {
+			return this.z>0?1:0;
+		}
+		if(this.z == 0) {
+			return obj.z>0?-1:0;
+		}
         if(this.y==obj.y) {
-        	return 0;
+        	if(this.z==obj.z) {
+        		return 0;
+        	}
+        	return this.z>obj.z?1:-1;
         }
         return this.y>obj.y?1:-1;
     }
