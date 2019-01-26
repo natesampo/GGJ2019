@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import game.GameObject.Animations;
 
 public class Game {
-	
+
 	private JFrame frame;
 	public Camera camera;
 	public static final String NAME = "GAME JAM";
@@ -32,10 +32,10 @@ public class Game {
 	public int windowHeight;
 	public boolean isRunning;
 	public Ship player;
-	
+
 	public boolean yourTurn = false;
 	public boolean lock = false;
-	
+
 	public int delete_this_variable = 0;
 	public double test_local_time = 0;
 	
@@ -45,11 +45,11 @@ public class Game {
 		Game game = new Game();
 		game.start();
 	}
-	
+
 	public Game() {
 		this(WIDTH, HEIGHT);
 	}
-	
+
 	@SuppressWarnings("serial")
 	public Game(int windowWidth, int windowHeight) {
 		loadAllAnimations();
@@ -75,27 +75,20 @@ public class Game {
 
 			@Override
 			public void keyReleased(KeyEvent ke) {
+				if(yourTurn) takeTurn(ke);
 			}
 
 			@Override
 			public void keyPressed(KeyEvent ke) {
-				switch(ke.getKeyCode()) {
-				case KeyEvent.VK_UP:
-				case KeyEvent.VK_DOWN:
-				case KeyEvent.VK_LEFT:
-				case KeyEvent.VK_RIGHT:
-					if(yourTurn) takeTurn(ke);
-					break;
-				}
 			}
 		});
-		
+
 		sprites.add(new Ship(5, 6, 0, 0));
 		sprites.add(new Ship(0, 0, 0, 0));
 		AudioPlayer music = new AudioPlayer("OpenSource.wav");
 		music.play();
 	}
-	
+
 	/**
 	 * Start the timer
 	 */
@@ -110,28 +103,32 @@ public class Game {
 			dt = now - then;
 			then = now;
 			if (dt > 0) {
-				update(Math.min(MAX_STEP, dt)/1000000000.0);
+				update(Math.min(MAX_STEP, dt) / 1000000000.0);
 			}
 			frame.repaint();
-			try{
-				Thread.sleep(Math.max((MIN_STEP - (System.nanoTime()-then))/1000000, 0));
-			} catch (Exception e) {}
+			try {
+				Thread.sleep(Math.max((MIN_STEP - (System.nanoTime() - then)) / 1000000, 0));
+			} catch (Exception e) {
+			}
 		}
 	}
 
 	/**
 	 * Update the game model
-	 * @param dt - elapsed time in seconds
+	 * 
+	 * @param dt
+	 *            - elapsed time in seconds
 	 */
 	public void update(double dt) {
-		if(lock) return;
+		if (lock)
+			return;
 		lock = true;
 		// Put code for user interface before camera update, so slowdowns
 		// don't affect UI elements.
-		dt = camera.update(dt);	//	dt changes values here based on camera speed
+		dt = camera.update(dt); // dt changes values here based on camera speed
 		Collections.sort(sprites); // Draw in order of y position
 		// Update GameObject graphics
-		for(int i=0; i<sprites.size(); i++) {
+		for (int i = 0; i < sprites.size(); i++) {
 			sprites.get(i).update(this, dt);
 		}
 		yourTurn = true;
@@ -140,90 +137,124 @@ public class Game {
 
 	/**
 	 * Draw the graphics
-	 * @param g - the game's Graphics context
+	 * 
+	 * @param g
+	 *            - the game's Graphics context
 	 */
 	public void draw(Graphics g) {
-		if(lock) return;
+		if (lock)
+			return;
 		lock = true;
 		Graphics2D g2 = (Graphics2D) g;
-		long xfoc = (int)(Math.sin(System.nanoTime()/1000000000.0)*(500)) - 640;
-		long yfoc = (int)(Math.cos(System.nanoTime()/1500000000.0)*(320)) - 360;
-		double zoom = Math.sin(System.nanoTime()/2500000000.0)*0.5 + 1.0;
-		xfoc = -WIDTH/2;
-		yfoc = -HEIGHT/2;
+		long xfoc = (int) (Math.sin(System.nanoTime() / 1000000000.0) * (500)) - 640;
+		long yfoc = (int) (Math.cos(System.nanoTime() / 1500000000.0) * (320)) - 360;
+		double zoom = Math.sin(System.nanoTime() / 2500000000.0) * 0.5 + 1.0;
+		xfoc = -WIDTH / 2;
+		yfoc = -HEIGHT / 2;
 		zoom = 1.0;
 		camera.set_target_pos(xfoc, yfoc);
 		camera.zoom.set_target_value(zoom);
 		g2.scale(camera.get_zoom(), camera.get_zoom());
-		g2.translate((int)(camera.get_x_pos() + WIDTH/(2*camera.get_zoom())), 
-				(int)(camera.get_y_pos() + HEIGHT/(2*camera.get_zoom())));
-		
+		g2.translate((int) (camera.get_x_pos() + WIDTH / (2 * camera.get_zoom())),
+				(int) (camera.get_y_pos() + HEIGHT / (2 * camera.get_zoom())));
+
 		int sq_size = 80;
-		int xs[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-		int ys[] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+		int xs[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+		int ys[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 		for (int x : xs) {
 			for (int y : ys) {
-				if ((x+y)%2 == 0) {
+				if ((x + y) % 2 == 0) {
 					g.setColor(Color.lightGray);
-					g.fillRect(sq_size*x, sq_size*y, sq_size, sq_size);
+					g.fillRect(sq_size * x, sq_size * y, sq_size, sq_size);
 				} else {
 					g.setColor(Color.WHITE);
-					g.fillRect(sq_size*x, sq_size*y, sq_size, sq_size);
+					g.fillRect(sq_size * x, sq_size * y, sq_size, sq_size);
 				}
 			}
 		}
-		for (GameObject sprite:sprites) {
+		for (GameObject sprite : sprites) {
 			sprite.draw(g);
 		}
 		lock = false;
 	}
-	
+
 	public void takeTurn(KeyEvent ke) {
 		switch(ke.getKeyCode()) {
-			case KeyEvent.VK_UP: yourTurn = !player.moveUp(); break;
-			case KeyEvent.VK_DOWN: yourTurn = !player.moveDown(); break;
-			case KeyEvent.VK_LEFT: yourTurn = !player.moveLeft(); break;
-			case KeyEvent.VK_RIGHT: yourTurn = !player.moveRight(); break;
+			case KeyEvent.VK_W:
+			case KeyEvent.VK_UP:
+				yourTurn = !player.moveUp();
+				break;
+			case KeyEvent.VK_S:
+			case KeyEvent.VK_DOWN:
+				yourTurn = !player.moveDown();
+				break;
+			case KeyEvent.VK_A:
+			case KeyEvent.VK_LEFT:
+				yourTurn = !player.moveLeft();
+				break;
+			case KeyEvent.VK_D:
+			case KeyEvent.VK_RIGHT:
+				yourTurn = !player.moveRight();
+				break;
 		}
 	}
-	
+
 	/**
 	 * Loads all animation files
 	 */
 	public static void loadAllAnimations() {
-		for(Animations a:Animations.values()) {
+		for (Animations a : Animations.values()) {
 			Sprite.loadAnimation(a);
 		}
 	}
-	
+
 	public void loadLevel(String name) {
-//		for(int x=0; x<W; x++) {
-//			for(int y=0; y<H; y++) {
-//				sprites.add(new Tile(x,y));
-//			}
-//		}
+		// for(int x=0; x<W; x++) {
+		// for(int y=0; y<H; y++) {
+		// sprites.add(new Tile(x,y));
+		// }
+		// }
 		try {
-			Scanner in = new Scanner(new FileReader(name+".txt"));
+			Scanner in = new Scanner(new FileReader(name + ".txt"));
 			int y = 0;
-			while(in.hasNext()) {
+			while (in.hasNext()) {
 				String s = in.nextLine();
-				for(int x=0; x<s.length(); x++) {
+				for (int x = 0; x < s.length(); x++) {
 					char c = s.charAt(x);
-					switch(c) {
-					case 'E': sprites.add(new Ship(x, y, 0, 1));
-					sprites.add(new Tile(x, y));
-					break;
+					switch (c) {
+					case 'E':
+						sprites.add(new Ship(x, y, 0, 1));
+						sprites.add(new Tile(x, y, 1));
+						break;
 					case 'S':
-					player = new Ship(x, y, 0, 0);
-					sprites.add(player);
-					sprites.add(new Tile(x, y));
-					break;
-					//case 'm': sprites.add(new Ship(x, y, 0, 1)); break;
-					//case 'm': sprites.add(new Ship(x, y, 0, 1)); break;
-					//case 'm': sprites.add(new Ship(x, y, 0, 1)); break;
-					//case 'E': sprites.add(new Ship(x, y, 0, 1)); break;
-					//case 'E': sprites.add(new Ship(x, y, 0, 1)); break;
-					default: sprites.add(new Tile(x, y)); break;
+						player = new Ship(x, y, 0, 0);
+						sprites.add(player);
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case '~':
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case 'x':
+						sprites.add(new Tile(x, y, 2));
+						break;
+					case 'X':
+						sprites.add(new Tile(x, y, 3));
+						break;
+					case 'm':
+						sprites.add(new Tile(x, y, 4));
+						break;
+					case '>':
+						sprites.add(new Tile(x, y, 5));
+						break;
+					case '<':
+						sprites.add(new Tile(x, y, 6));
+						break;
+					case '^':
+						sprites.add(new Tile(x, y, 7));
+						break;
+					case '/':
+						sprites.add(new Tile(x, y, 8));
+						break;
 					}
 				}
 				y++;
