@@ -23,7 +23,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 		WATER("Water", 8, 8),
 		SHIP("Ship", 1, 1),
 		ROCK1("Rock1", 1, 1),
-		BOOM("Boom", 4, 4),
+		BOOM("Fire", 12, 12),
 		ENEMY1("Enemy1", 1, 1),
 		ENEMY2("Enemy2", 1, 1),
 		ENEMY3("Enemy3", 1, 1);

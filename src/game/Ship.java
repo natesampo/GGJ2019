@@ -78,8 +78,8 @@ public class Ship extends GameObject {
 	}
 	
 	public void shoot() {
-		Game.sprites.add(new Boom(x, y, heading, true));
-		Game.sprites.add(new Boom(x, y, heading, false));
+		Game.sprites.add(new Boom(this, heading, true));
+		Game.sprites.add(new Boom(this, heading, false));
 		if(heading%180==90) { // horizontal
 			for(int i=x+1;i<Game.W;i++) {
 				if(getHit(i,y)) break;
