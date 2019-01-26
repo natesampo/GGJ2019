@@ -199,28 +199,28 @@ public class Game {
 	}
 	
 	public void loadLevel(String name) {
-//		for(int x=0; x<W; x++) {
-//			for(int y=0; y<H; y++) {
-//				sprites.add(new Tile(x,y));
-//			}
-//		}
-		try {
-			Scanner in = new Scanner(new FileReader(name+".txt"));
-			int y = 0;
-			while(in.hasNext()) {
-				String s = in.nextLine();
-				for(int x=0; x<s.length(); x++) {
-					char c = s.charAt(x);
-					switch(c) {
-					case '1': sprites.add(new Ship(x, y, 0, 1)); break;
-					case '_': sprites.add(new Tile(x, y)); break;
-					}
-				}
-				y++;
+		for(int x=0; x<W; x++) {
+			for(int y=0; y<H; y++) {
+				sprites.add(new Tile(x,y));
 			}
-			in.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		}
+//		try {
+//			Scanner in = new Scanner(new FileReader(name+".txt"));
+//			int y = 0;
+//			while(in.hasNext()) {
+//				String s = in.nextLine();
+//				for(int x=0; x<s.length(); x++) {
+//					char c = s.charAt(x);
+//					switch(c) {
+//					case '1': sprites.add(new Ship(x, y, 0, 1)); break;
+//					case '_': sprites.add(new Tile(x, y)); break;
+//					}
+//				}
+//				y++;
+//			}
+//			in.close();
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
 	}
 }

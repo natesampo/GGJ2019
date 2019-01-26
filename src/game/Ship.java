@@ -54,6 +54,8 @@ public class Ship extends GameObject {
 	}
 	
 	public void translate(int dx, int dy) {
+		xreal = x;
+		yreal = y;
 		x += dx;
 		y += dy;
 	}
