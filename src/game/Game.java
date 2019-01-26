@@ -87,6 +87,9 @@ public class Game {
 			}
 		});
 
+		sprites.add(new Button(12, 4, 0));
+		sprites.add(new Button(12, 7, 1));
+		
 		AudioPlayer music = new AudioPlayer("OpenSource.wav");
 		music.play();
 	}
