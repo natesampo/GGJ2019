@@ -1,0 +1,13 @@
+~~________~_
+~E~_____E_~~
+~___~___~~__
+~X~~S__~__~_
+~_______~~~~
+__E______x__
+~___________
+~~__x______~
+__E___~~___E
+_~~_____XXX_
+_______~~___
+XX_________~
+#Shallow water surrounds your ship. As begins to run aground the enemy arrives.
