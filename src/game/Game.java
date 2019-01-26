@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -42,6 +43,8 @@ public class Game {
 	public double test_local_time = 0;
 	
 	public static ArrayList<GameObject> sprites = new ArrayList<GameObject>();
+	
+	public double startBars;
 	
 	public static void main(String[] args) {
 		Game game = new Game();
@@ -122,9 +125,16 @@ public class Game {
 	 *            - elapsed time in seconds
 	 */
 	public void update(double dt) {
+		
+		//print(dt);
+		
 		if (lock)
 			return;
 		lock = true;
+		
+		if(startBars >= 0){
+			startBars = startBars - dt*50;	
+		}
 		// Put code for user interface before camera update, so slowdowns
 		// don't affect UI elements.
 		dt = camera.update(dt); // dt changes values here based on camera speed
@@ -177,7 +187,20 @@ public class Game {
 		for (GameObject sprite : sprites) {
 			sprite.draw(g);
 		}
+		//black stuff
+		if(startBars>0){
+		g.setColor(Color.DARK_GRAY);
+		g.fillRect(0, (int)startBars - 170 - 17, WIDTH, 170);
+		g.fillRect(0, HEIGHT - (int)startBars, WIDTH, 170);
+		
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("PiratesBay", Font.PLAIN, 32));
+		g.drawString("ARRRR The life of a Pirate is a sad one", 200, HEIGHT - 70);
+		}
+		
 		lock = false;
+		
+		
 	}
 
 	public void takeTurn(KeyEvent ke) {
@@ -242,9 +265,11 @@ public class Game {
 						break;
 					case 'X':
 						sprites.add(new Tile(x, y, 3));
+						sprites.add(new Tile(x, y, 1));
 						break;
 					case 'm':
 						sprites.add(new Tile(x, y, 4));
+						sprites.add(new Tile(x, y, 1));
 						break;
 					case '>':
 						sprites.add(new Tile(x, y, 5));
@@ -258,10 +283,14 @@ public class Game {
 					case '/':
 						sprites.add(new Tile(x, y, 8));
 						break;
+					default:
+						break;
 					}
 				}
 				y++;
 			}
+			startBars = 170;
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

@@ -101,7 +101,7 @@ public class Ship extends GameObject {
 		if(Game.grid[x][y] != null) {
 			GameObject obj = Game.grid[x][y];
 			if(obj instanceof Tile) {
-				if(((Tile)obj).type == 2) {
+				if(((Tile)obj).type == 3) {
 					return true;
 				}
 			}
@@ -138,6 +138,7 @@ public class Ship extends GameObject {
 			if(obj instanceof Tile) {
 				switch(((Tile)obj).type) {
 					case 2: return true;
+					case 3: return true;
 				}
 			}
 			if(obj instanceof Ship) {
