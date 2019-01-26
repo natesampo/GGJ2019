@@ -4,12 +4,15 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.util.HashMap;
 
+import game.GameObject.Animations;
+
 /**
  * Handles animation of GameObjects
  */
 public class Sprite {
 	
-	public int framerate = Game.FRAME_RATE, width, height, duration;
+	public int framerate = Game.FRAME_RATE, width, height;
+	public double duration;
 	private static HashMap<GameObject.Animations, SpriteSheet[]> animations = new HashMap<GameObject.Animations, SpriteSheet[]>();
 	private Image frame;
 	private GameObject.Animations state;
@@ -38,7 +41,6 @@ public class Sprite {
 		SpriteSheet[] all = new SpriteSheet[1];
 		all[0] = new SpriteSheet(i>0?a.filename:name+".png", a.columns, a.frames);
 		animations.put(a, all);
-	
 	}
 	
 	/**
@@ -65,7 +67,7 @@ public class Sprite {
 		SpriteSheet animation = all[index];
 		width = animation.width;
 		height = animation.height;
-		duration = animation.frames*framerate;
+		duration = 1.0*animation.frames/framerate;
 		frame = animation.getFrame((int)(t*framerate+offset)%animation.frames);
 		if(t >= duration) {
 			t = 0; // Loop animation

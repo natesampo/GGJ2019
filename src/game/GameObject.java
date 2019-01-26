@@ -21,7 +21,9 @@ public abstract class GameObject implements Comparable<GameObject> {
 	public enum Animations {
 		HYDRA("hydra", 4, 4),
 		WATER("Water", 8, 8),
-		SHIP("Ship", 1, 1);
+		SHIP("Ship", 1, 1),
+		ROCK1("Rock1", 1, 1),
+		BOOM("Boom", 4, 4);
 		
 		public String filename;
 		public int columns;

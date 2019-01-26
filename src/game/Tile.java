@@ -4,7 +4,7 @@ import game.GameObject.Animations;
 
 public class Tile extends GameObject {
 
-	private int type;
+	public int type;
 	public Tile(int x, int y, int type) {
 		super(x, y);
 		this.type = type;
@@ -14,8 +14,9 @@ public class Tile extends GameObject {
 	public void update(Game game, double dt) {
 		switch(type){
 		case 1:
-		this.sprite.animate(Animations.WATER, dt);
-		break;
+			this.sprite.animate(Animations.WATER, dt); break;
+		case 2:
+			this.sprite.animate(Animations.ROCK1, dt); break;
 	}	
 	}
 

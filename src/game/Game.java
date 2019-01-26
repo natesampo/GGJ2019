@@ -86,8 +86,6 @@ public class Game {
 			}
 		});
 
-		sprites.add(new Ship(5, 6, 0, 0));
-		sprites.add(new Ship(0, 0, 0, 0));
 		AudioPlayer music = new AudioPlayer("OpenSource.wav");
 		music.play();
 	}
@@ -198,6 +196,10 @@ public class Game {
 			case KeyEvent.VK_D:
 			case KeyEvent.VK_RIGHT:
 				yourTurn = !player.moveRight();
+				break;
+			case KeyEvent.VK_SPACE:
+				yourTurn = false;
+				player.shoot();
 				break;
 		}
 	}

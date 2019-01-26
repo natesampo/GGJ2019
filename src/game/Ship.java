@@ -4,6 +4,8 @@ import java.awt.Graphics;
 
 public class Ship extends GameObject {
 	public int heading, type;
+	public double bounceX = 0, bounceY = 0;
+	
 	
 	/**
 	 * Creates a new ship. 
@@ -20,10 +22,21 @@ public class Ship extends GameObject {
 
 	@Override
 	public void update(Game game, double dt) {
-		xreal += Math.signum(x-xreal)*Math.max(Math.abs(x-xreal)*kspeed, minspeed);
-		yreal += Math.signum(y-yreal)*Math.max(Math.abs(y-yreal)*kspeed, minspeed);
-		if(Math.abs(xreal-x)<minspeed) xreal = x;
-		if(Math.abs(yreal-y)<minspeed) yreal = y;
+		if(bounceX!=0||bounceY!=0) {
+			xreal += Math.signum(x+bounceX-xreal)*Math.max(Math.abs(x+bounceX-xreal)*kspeed, minspeed);
+			yreal += Math.signum(y+bounceY-yreal)*Math.max(Math.abs(y+bounceY-yreal)*kspeed, minspeed);
+			if((bounceX>=0&&xreal>=x+bounceX) || (bounceX<=0&&xreal<=x+bounceX)) {
+				if((bounceY>=0&&yreal>=y+bounceY) || (bounceY<=0&&yreal<=y+bounceY)) {
+					bounceX = 0;
+					bounceY = 0;
+				}
+			}
+		} else {
+			xreal += Math.signum(x-xreal)*Math.max(Math.abs(x-xreal)*kspeed, minspeed);
+			yreal += Math.signum(y-yreal)*Math.max(Math.abs(y-yreal)*kspeed, minspeed);
+			if(Math.abs(xreal-x)<minspeed) xreal = x;
+			if(Math.abs(yreal-y)<minspeed) yreal = y;
+		}
 		this.sprite.animate(Animations.SHIP, dt, heading/90);
 	}
 	
@@ -55,12 +68,18 @@ public class Ship extends GameObject {
 		return true;
 	}
 	
+	public void shoot() {
+		Game.sprites.add(new Boom(x, y, heading));
+	}
+	
 	public void translate(int dx, int dy) {
 //		xreal = x;
 //		yreal = y;
 		x += dx;
 		y += dy;
 		if(collide(x, y)) {
+			bounceX = Math.signum(dx)*0.5;
+			bounceY = Math.signum(dy)*0.5;
 			x -= dx;
 			y -= dy;
 		}
@@ -68,8 +87,12 @@ public class Ship extends GameObject {
 	
 	public boolean collide(int x, int y) {
 		for(GameObject obj:Game.sprites) {
-			if(obj instanceof Tile) {
-				
+			if(obj.x == x && obj.y == y) {
+				if(obj instanceof Tile) {
+					switch(((Tile)obj).type) {
+						case 2: return true;
+					}
+				}
 			}
 		}
 		return false;
