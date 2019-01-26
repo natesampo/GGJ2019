@@ -10,7 +10,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 	protected Sprite sprite;
 	public int x, y;
 	public double xreal, yreal;
-	public double kspeed = .1, minspeed = 1;
+	public double kspeed = .15, minspeed = .02;
 	public int SCALE = 64;
 	public int XOFFSET = 32, YOFFSET = 64;
 	public boolean visible = true;

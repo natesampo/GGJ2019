@@ -20,8 +20,10 @@ public class Ship extends GameObject {
 
 	@Override
 	public void update(Game game, double dt) {
-		xreal += (x-xreal)*kspeed;
-		yreal += (y-yreal)*kspeed;
+		xreal += Math.signum(x-xreal)*Math.max(Math.abs(x-xreal)*kspeed, minspeed);
+		yreal += Math.signum(y-yreal)*Math.max(Math.abs(y-yreal)*kspeed, minspeed);
+		if(Math.abs(xreal-x)<minspeed) xreal = x;
+		if(Math.abs(yreal-y)<minspeed) yreal = y;
 		this.sprite.animate(Animations.RIGHT, dt);
 	}
 	
