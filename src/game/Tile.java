@@ -13,6 +13,7 @@ public class Tile extends GameObject {
 		this.type = type;
 		if (type == 1) {
 			this.z = 0;
+			this.sprite.offset((int)(Math.random()*8));
 		}
 		if (type == 2||type==3) {
 			Game.grid[x][y] = this;

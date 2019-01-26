@@ -60,6 +60,7 @@ public class Game {
 		loadAllAnimations();
 		frame = new JFrame(NAME);
 		camera = new Camera();
+		camera.goTo(-WIDTH/2, -HEIGHT/2);
 		this.windowWidth = windowWidth;
 		this.windowHeight = windowHeight;
 		frame.setSize(windowWidth, windowHeight);

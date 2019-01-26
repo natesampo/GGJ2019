@@ -25,7 +25,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 		ROCK1("Rock1", 1, 1),
 		ROCK2("Rock2", 1, 1),
 		ROCK3("Rock3", 1, 1),
-		BOOM("Boom", 4, 4),
+		BOOM("Fire", 12, 12),
 		ENEMY1("Enemy1", 1, 1),
 		ENEMY2("Enemy2", 1, 1),
 		ENEMY3("Enemy3", 1, 1);
