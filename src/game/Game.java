@@ -5,8 +5,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -18,17 +21,20 @@ public class Game {
 	private JFrame frame;
 	public Camera camera;
 	public static final String NAME = "GAME JAM";
-	public static final int WIDTH = 1280;
-	public static final int HEIGHT = 755;
+	public static final int WIDTH = 896; // window width pixels
+	public static final int HEIGHT = 896; // window height pixels
+	public static final int W = 12; // grid width
+	public static final int H = 12; // grid height
 	public static final int MAX_STEP = 50000000;
 	public static final int FRAME_RATE = 12;
 	public int MIN_STEP = 20000000;
 	public int windowWidth;
 	public int windowHeight;
 	public boolean isRunning;
-	public PlatformingObject player;
+	public Ship player;
 	
-	public boolean leftPressed, rightPressed, upPressed, downPressed = false;
+	public boolean yourTurn = false;
+	public boolean lock = false;
 	
 	public int delete_this_variable = 0;
 	public double test_local_time = 0;
@@ -64,40 +70,30 @@ public class Game {
 		frame.addKeyListener(new KeyListener() {
 
 			@Override
-			public void keyPressed(KeyEvent ke) {
-				switch(ke.getKeyCode()) {
-				case KeyEvent.VK_UP: upPressed = true; break;
-				case KeyEvent.VK_DOWN: downPressed = true; break;
-				case KeyEvent.VK_LEFT: leftPressed = true; break;
-				case KeyEvent.VK_RIGHT: rightPressed = true; break;
-				}
+			public void keyTyped(KeyEvent ke) {
 			}
 
 			@Override
 			public void keyReleased(KeyEvent ke) {
-				switch(ke.getKeyCode()) {
-				case KeyEvent.VK_UP: upPressed = false; break;
-				case KeyEvent.VK_DOWN: downPressed = false; break;
-				case KeyEvent.VK_LEFT: leftPressed = false; break;
-				case KeyEvent.VK_RIGHT: rightPressed = false; break;
-				}
 			}
 
 			@Override
-			public void keyTyped(KeyEvent ke) {
-				// TODO Auto-generated method stub
-				
+			public void keyPressed(KeyEvent ke) {
+				switch(ke.getKeyCode()) {
+				case KeyEvent.VK_UP:
+				case KeyEvent.VK_DOWN:
+				case KeyEvent.VK_LEFT:
+				case KeyEvent.VK_RIGHT:
+					if(yourTurn) takeTurn(ke);
+					break;
+				}
 			}
-			
 		});
-		player = new PlatformingObject(640, 640);
+		player = new Ship(5, 5, 0, 0);
+		player.sprite.offset(2);
 		sprites.add(player);
-//		sprites.add(new PlatformingObject(640, 640));
-		sprites.add(new PlatformingObject(640+320, 640));
-		sprites.add(new PlatformingObject(640+160, 640));
-//		sprites.add(new PlatformingObject(640, 640+320));
-//		sprites.add(new PlatformingObject(640+320, 640+160));
-//		sprites.add(new PlatformingObject(640, 640+160));
+		sprites.add(new Ship(5, 6, 0, 0));
+		sprites.add(new Ship(0, 0, 0, 0));
 		AudioPlayer music = new AudioPlayer("OpenSource.wav");
 		music.play();
 	}
@@ -110,6 +106,7 @@ public class Game {
 		long then = System.nanoTime();
 		long now = then;
 		long dt;
+		loadLevel("");
 		while (isRunning) {
 			now = System.nanoTime();
 			dt = now - then;
@@ -129,48 +126,18 @@ public class Game {
 	 * @param dt - elapsed time in seconds
 	 */
 	public void update(double dt) {
+		if(lock) return;
+		lock = true;
 		// Put code for user interface before camera update, so slowdowns
 		// don't affect UI elements.
-		
 		dt = camera.update(dt);	//	dt changes values here based on camera speed
-		Collections.sort(sprites);
-		// Update GameObjects and store desired movements
-		double[] dx = new double[sprites.size()];
-		double[] dy = new double[sprites.size()];
-//		if(upPressed) player.up();
-//		if(downPressed) player.down();
-//		if(leftPressed) player.left();
-//		if(rightPressed) player.right();
+		Collections.sort(sprites); // Draw in order of y position
+		// Update GameObject graphics
 		for(int i=0; i<sprites.size(); i++) {
-			double[] delta = sprites.get(i).update(this, dt);
-			dx[i] = delta[0];
-			dy[i] = delta[1];
+			sprites.get(i).update(this, dt);
 		}
-		// Collide GameObjects and carry out movements
-		for(int i=0; i<sprites.size()-1; i++) {
-			GameObject s1 = sprites.get(i);
-			for(int j=i+1; j<sprites.size(); j++) {
-				GameObject s2 = sprites.get(j);
-				double[] delta = new double[]{0,0,0};
-				if(s1.isCollidable(s2)) { // s2 can block s1
-					delta = s1.checkCollision(dx[i], dy[i], dx[j], dy[j], s2);
-					dx[i] = delta[0];
-					dy[i] = delta[1];
-				} else if(s2.isCollidable(s1)) { // s1 can block s2
-					delta = s2.checkCollision(dx[j], dy[j], dx[i], dy[i], s1);
-					dx[j] = delta[0];
-					dy[j] = delta[1];
-				} else if(s1.isInteractable(s2)||s2.isInteractable(s1)) { // no blocking
-					delta = s2.checkCollision(dx[j], dy[j], dx[i], dy[i], s1);
-				}
-				if(delta[2]>0) { // collision occurred
-					s2.collide(s1);
-					s1.collide(s2);
-				}
-			}
-			s1.move(dx[i], dy[i]);
-		}
-		sprites.get(sprites.size()-1).move(dx[sprites.size()-1], dy[sprites.size()-1]);
+		yourTurn = true;
+		lock = false;
 	}
 
 	/**
@@ -178,6 +145,8 @@ public class Game {
 	 * @param g - the game's Graphics context
 	 */
 	public void draw(Graphics g) {
+		if(lock) return;
+		lock = true;
 		Graphics2D g2 = (Graphics2D) g;
 		long xfoc = (int)(Math.sin(System.nanoTime()/1000000000.0)*(500)) - 640;
 		long yfoc = (int)(Math.cos(System.nanoTime()/1500000000.0)*(320)) - 360;
@@ -208,6 +177,16 @@ public class Game {
 		for (GameObject sprite:sprites) {
 			sprite.draw(g);
 		}
+		lock = false;
+	}
+	
+	public void takeTurn(KeyEvent ke) {
+		switch(ke.getKeyCode()) {
+			case KeyEvent.VK_UP: yourTurn = !player.moveUp(); break;
+			case KeyEvent.VK_DOWN: yourTurn = !player.moveDown(); break;
+			case KeyEvent.VK_LEFT: yourTurn = !player.moveLeft(); break;
+			case KeyEvent.VK_RIGHT: yourTurn = !player.moveRight(); break;
+		}
 	}
 	
 	/**
@@ -216,6 +195,32 @@ public class Game {
 	public static void loadAllAnimations() {
 		for(Animations a:Animations.values()) {
 			Sprite.loadAnimation(a);
+		}
+	}
+	
+	public void loadLevel(String name) {
+//		for(int x=0; x<W; x++) {
+//			for(int y=0; y<H; y++) {
+//				sprites.add(new Tile(x,y));
+//			}
+//		}
+		try {
+			Scanner in = new Scanner(new FileReader(name+".txt"));
+			int y = 0;
+			while(in.hasNext()) {
+				String s = in.nextLine();
+				for(int x=0; x<s.length(); x++) {
+					char c = s.charAt(x);
+					switch(c) {
+					case '1': sprites.add(new Ship(x, y, 0, 1)); break;
+					case '_': sprites.add(new Tile(x, y)); break;
+					}
+				}
+				y++;
+			}
+			in.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 	}
 }

@@ -14,6 +14,7 @@ public class Sprite {
 	private Image frame;
 	private GameObject.Animations state;
 	private double t;
+	private int offset = 0;
 	
 	/**
 	 * Adds a sprite sheet to the dictionary
@@ -49,13 +50,17 @@ public class Sprite {
 		width = animation.width;
 		height = animation.height;
 		duration = animation.frames*framerate;
-		frame = animation.getFrame((int)(t*framerate)%animation.frames);
+		frame = animation.getFrame((int)(t*framerate+offset)%animation.frames);
 		if(t >= duration) {
 			t = 0; // Loop animation
 			return true;
 		} else {
 			return false;
 		}
+	}
+	
+	public void offset(int frames) {
+		offset = frames;
 	}
 	
 	/**
