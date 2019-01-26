@@ -41,11 +41,13 @@ public class Game {
 
 	public int delete_this_variable = 0;
 	public double test_local_time = 0;
-	
+
 	public static ArrayList<GameObject> sprites = new ArrayList<GameObject>();
-	
-	public double startBars;
-	
+
+	public double startBars, loadTime;
+
+	public String levelText = "";
+
 	public static void main(String[] args) {
 		Game game = new Game();
 		game.start();
@@ -60,7 +62,7 @@ public class Game {
 		loadAllAnimations();
 		frame = new JFrame(NAME);
 		camera = new Camera();
-		camera.goTo(-WIDTH/2, -HEIGHT/2);
+		camera.goTo(-WIDTH / 2, -HEIGHT / 2);
 		this.windowWidth = windowWidth;
 		this.windowHeight = windowHeight;
 		frame.setSize(windowWidth, windowHeight);
@@ -81,12 +83,14 @@ public class Game {
 
 			@Override
 			public void keyReleased(KeyEvent ke) {
-				if(keyLock == ke.getKeyCode()) keyLock = 0;
+				if (keyLock == ke.getKeyCode())
+					keyLock = 0;
 			}
 
 			@Override
 			public void keyPressed(KeyEvent ke) {
-				if(yourTurn && keyLock!=ke.getKeyCode()) takeTurn(ke);
+				if (yourTurn && keyLock != ke.getKeyCode())
+					takeTurn(ke);
 				keyLock = ke.getKeyCode();
 			}
 		});
@@ -103,7 +107,7 @@ public class Game {
 		long then = System.nanoTime();
 		long now = then;
 		long dt;
-		loadLevel("1.1");
+		loadLevel("3.1");
 		while (isRunning) {
 			now = System.nanoTime();
 			dt = now - then;
@@ -126,15 +130,16 @@ public class Game {
 	 *            - elapsed time in seconds
 	 */
 	public void update(double dt) {
+
 		
-		//print(dt);
-		
+		// print(dt);
+
 		if (lock)
 			return;
 		lock = true;
-		
-		if(startBars >= 0){
-			startBars = startBars - dt*50;	
+
+		if (startBars >= 0 && System.currentTimeMillis()- loadTime > 2750) {
+			startBars = startBars - dt * 100;
 		}
 		// Put code for user interface before camera update, so slowdowns
 		// don't affect UI elements.
@@ -188,44 +193,43 @@ public class Game {
 		for (GameObject sprite : sprites) {
 			sprite.draw(g);
 		}
-		//black stuff
-		if(startBars>0){
-		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0, (int)startBars - 170 - 17, WIDTH, 170);
-		g.fillRect(0, HEIGHT - (int)startBars, WIDTH, 170);
-		
-		g.setColor(Color.WHITE);
-		g.setFont(new Font("PiratesBay", Font.PLAIN, 32));
-		g.drawString("ARRRR The life of a Pirate is a sad one", 200, HEIGHT - 70);
+		// black stuff
+		if (startBars > 0) {
+			g.setColor(Color.DARK_GRAY);
+			g.fillRect(0, (int) startBars - 170 - 17, WIDTH, 170);
+			g.fillRect(0, HEIGHT - (int) startBars, WIDTH, 170);
+
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("PiratesBay", Font.PLAIN, 32));
+			g.drawString(levelText, 200, HEIGHT - 70);
 		}
-		
+
 		lock = false;
-		
-		
+
 	}
 
 	public void takeTurn(KeyEvent ke) {
-		switch(ke.getKeyCode()) {
-			case KeyEvent.VK_W:
-			case KeyEvent.VK_UP:
-				yourTurn = !player.moveUp();
-				break;
-			case KeyEvent.VK_S:
-			case KeyEvent.VK_DOWN:
-				yourTurn = !player.moveDown();
-				break;
-			case KeyEvent.VK_A:
-			case KeyEvent.VK_LEFT:
-				yourTurn = !player.moveLeft();
-				break;
-			case KeyEvent.VK_D:
-			case KeyEvent.VK_RIGHT:
-				yourTurn = !player.moveRight();
-				break;
-			case KeyEvent.VK_SPACE:
-				yourTurn = false;
-				player.shoot();
-				break;
+		switch (ke.getKeyCode()) {
+		case KeyEvent.VK_W:
+		case KeyEvent.VK_UP:
+			yourTurn = !player.moveUp();
+			break;
+		case KeyEvent.VK_S:
+		case KeyEvent.VK_DOWN:
+			yourTurn = !player.moveDown();
+			break;
+		case KeyEvent.VK_A:
+		case KeyEvent.VK_LEFT:
+			yourTurn = !player.moveLeft();
+			break;
+		case KeyEvent.VK_D:
+		case KeyEvent.VK_RIGHT:
+			yourTurn = !player.moveRight();
+			break;
+		case KeyEvent.VK_SPACE:
+			yourTurn = false;
+			player.shoot();
+			break;
 		}
 	}
 
@@ -239,11 +243,14 @@ public class Game {
 	}
 
 	public void loadLevel(String name) {
+		
+		loadTime = System.currentTimeMillis();
+		
 		try {
 			Scanner in = new Scanner(new FileReader(name + ".txt"));
 			grid = new GameObject[W][H];
 			int y = 0;
-			while (in.hasNext()) {
+			while (in.hasNext() && y< 12) {
 				String s = in.nextLine();
 				for (int x = 0; x < s.length(); x++) {
 					char c = s.charAt(x);
@@ -284,14 +291,31 @@ public class Game {
 					case '/':
 						sprites.add(new Tile(x, y, 8));
 						break;
+					case '_':
+						sprites.add(new Tile(x, y, 9));
+						break;
 					default:
+						//if (levelText == null) {
+						//	levelText = c+ "";
+						//} else {
+						//	levelText = levelText + c;
+						//}
 						break;
 					}
 				}
 				y++;
 			}
-			startBars = 170;
+			if(in.hasNext()){
+				 levelText  = in.nextLine();
+				 System.out.println(levelText);
+			}
 			
+			
+			
+			
+			System.out.println(levelText);
+			startBars = 170;
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
