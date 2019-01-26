@@ -75,18 +75,11 @@ public class Game {
 
 			@Override
 			public void keyReleased(KeyEvent ke) {
+				if(yourTurn) takeTurn(ke);
 			}
 
 			@Override
 			public void keyPressed(KeyEvent ke) {
-				switch(ke.getKeyCode()) {
-				case KeyEvent.VK_UP:
-				case KeyEvent.VK_DOWN:
-				case KeyEvent.VK_LEFT:
-				case KeyEvent.VK_RIGHT:
-					if(yourTurn) takeTurn(ke);
-					break;
-				}
 			}
 		});
 		
@@ -180,10 +173,22 @@ public class Game {
 	
 	public void takeTurn(KeyEvent ke) {
 		switch(ke.getKeyCode()) {
-			case KeyEvent.VK_UP: yourTurn = !player.moveUp(); break;
-			case KeyEvent.VK_DOWN: yourTurn = !player.moveDown(); break;
-			case KeyEvent.VK_LEFT: yourTurn = !player.moveLeft(); break;
-			case KeyEvent.VK_RIGHT: yourTurn = !player.moveRight(); break;
+			case KeyEvent.VK_W:
+			case KeyEvent.VK_UP:
+				yourTurn = !player.moveUp();
+				break;
+			case KeyEvent.VK_S:
+			case KeyEvent.VK_DOWN:
+				yourTurn = !player.moveDown();
+				break;
+			case KeyEvent.VK_A:
+			case KeyEvent.VK_LEFT:
+				yourTurn = !player.moveLeft();
+				break;
+			case KeyEvent.VK_D:
+			case KeyEvent.VK_RIGHT:
+				yourTurn = !player.moveRight();
+				break;
 		}
 	}
 	
