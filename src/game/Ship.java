@@ -60,15 +60,20 @@ public class Ship extends GameObject {
 //		yreal = y;
 		x += dx;
 		y += dy;
-//		if(collide(x, y)) {
-//			x -= dx;
-//			y -= dy;
-//		}
+		if(collide(x, y)) {
+			x -= dx;
+			y -= dy;
+		}
 	}
-//	
-//	public boolean collide(int x, int y) {
-//		Game.sprites
-//	}
+	
+	public boolean collide(int x, int y) {
+		for(GameObject obj:Game.sprites) {
+			if(obj instanceof Tile) {
+				
+			}
+		}
+		return false;
+	}
 	
 	/**
 	 * Renders the sprite
