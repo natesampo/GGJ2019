@@ -225,7 +225,6 @@ public class Game {
 				}
 				y++;
 			}
-			in.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

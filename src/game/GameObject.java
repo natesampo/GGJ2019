@@ -10,7 +10,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 	protected Sprite sprite;
 	public int x, y;
 	public double xreal, yreal;
-	public double kspeed = 1;
+	public double kspeed = .1, minspeed = 1;
 	public int SCALE = 64;
 	public int XOFFSET = 32, YOFFSET = 64;
 	public boolean visible = true;
@@ -20,7 +20,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 	 */
 	public enum Animations {
 		HYDRA("hydra", 4, 4),
-		WATER("Water", 1, 1),
+		WATER("Water", 8, 8),
 		RIGHT("ShipRight", 1, 1);
 		
 		public String filename;

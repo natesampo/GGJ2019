@@ -54,6 +54,8 @@ public class Ship extends GameObject {
 	}
 	
 	public void translate(int dx, int dy) {
+		xreal = x;
+		yreal = y;
 		x += dx;
 		y += dy;
 	}
@@ -68,4 +70,13 @@ public class Ship extends GameObject {
 //		g2d.rotate(Math.toRadians(degrees));
 //		super.draw(g);
 //	}
+	
+	@Override
+    public int compareTo(GameObject obj) {
+		if(obj instanceof Tile) return 1;
+        if(this.y==obj.y) {
+        	return 0;
+        }
+        return this.y>obj.y?1:-1;
+    }
 }
