@@ -57,6 +57,13 @@ public class Sprite {
 			animations.put(a, all);
 			return;
 		}
+		if(name.contains("Button")) {
+			SpriteSheet[] all = new SpriteSheet[4];
+			all[0] = new SpriteSheet(i>0?a.filename:name+"LoadLeftCannon.png", a.columns, a.frames);
+			all[1] = new SpriteSheet(i>0?a.filename:name+"LoadRightCannon.png", a.columns, a.frames);
+			all[2] = new SpriteSheet(i>0?a.filename:name+"FireLeftCannon.png", a.columns, a.frames);
+			all[3] = new SpriteSheet(i>0?a.filename:name+"FireRightCannon.png", a.columns, a.frames);
+		}
 		SpriteSheet[] all = new SpriteSheet[1];
 		all[0] = new SpriteSheet(i>0?a.filename:name+".png", a.columns, a.frames);
 		animations.put(a, all);
