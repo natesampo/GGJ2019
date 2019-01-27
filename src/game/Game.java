@@ -1,5 +1,6 @@
 package game;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -42,13 +43,15 @@ public class Game {
 	private SpriteSheet hpbar, hpbarheart, gold;
 
 	public boolean yourTurn = true;
-	public boolean lock = false;
+	public boolean lock = true;
 	public int keyLock = 0;
 	public static GameObject[][] grid = new GameObject[W][H];
 	public static int[][] currentGrid = new int[W][H];
 
 	public int delete_this_variable = 0;
 	public double test_local_time = 0;
+	public float mapAlpha = 1;
+	public double t = 0;
 
 	public static ArrayList<GameObject> sprites = new ArrayList<GameObject>();
 	public static ArrayList<Button> buttons = new ArrayList<Button>();
@@ -58,6 +61,7 @@ public class Game {
 	public String levelText2 = "";
 	public String levelText3 = "";
 	public Font pirateFont, pirateFontBig, pirateFontGold;
+	public SpriteSheet map;
 
 	public int progress = 1;
 
@@ -194,8 +198,19 @@ public class Game {
 								break;
 							case 4:
 								if (yourTurn) {								
+									int x = player.x;
+									int y = player.y;
+									switch(player.heading) {
+										case 0: x--; break;
+										case 90: y++; break;
+										case 180: x++; break;
+										case 270: y--; break;
+									}
+									if(player.collideNoShips(x, y)) {
+										break;
+									}
 									player.actionsLeft--;
-									sprites.add(new Tile(player.x, player.y, 4));
+									sprites.add(new Tile(x, y, 4));
 									
 									if(player.actionsLeft <= 0) {
 										yourTurn = false;
@@ -273,6 +288,7 @@ public class Game {
 		long dt;
 		loadLevel("1.4");
 		Bar();
+		lock = false;
 		while (isRunning) {
 			now = System.nanoTime();
 			dt = now - then;
@@ -301,9 +317,11 @@ public class Game {
 		if (lock)
 			return;
 		lock = true;
-
-		if (startBars >= 0 && System.currentTimeMillis() - loadTime > 3500) {
-			startBars = startBars - dt * 150;
+		t += dt;
+		if(t>2) mapAlpha-=dt*5;
+		if(mapAlpha<0.3) mapAlpha = 0;
+		if (startBars >= 0 && System.currentTimeMillis() - loadTime > 5500) {
+			startBars = startBars - dt * 550;
 		}
 		// Put code for user interface before camera update, so slowdowns
 		// don't affect UI elements.
@@ -339,6 +357,7 @@ public class Game {
 		} else if(enemyCount()==0) {
 			progress++;
 			loadLevel(getLevel(progress));
+			Bar();
 		}
 		lock = false;
 	}
@@ -419,8 +438,11 @@ public class Game {
 			
 			g.setFont(pirateFontBig);
 
-			g.drawString(levelText3, 110, -62 + (int)startBars);			
+			g.drawString(levelText3, 110, -62 + (int)startBars);
 		}
+		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,mapAlpha);
+		((Graphics2D) g).setComposite(ac);
+		g.drawImage(map.getFrame(0),0,-15,WIDTH,HEIGHT,null);
 		
 		lock = false;
 	}
@@ -507,7 +529,9 @@ public class Game {
 	}
 
 	public void loadLevel(String name) {
-
+		map = new SpriteSheet("Level"+(progress)+"Map.png", 1, 1);
+		mapAlpha = 1;
+		t = 0;
 		loadTime = System.currentTimeMillis();
 
 		try {

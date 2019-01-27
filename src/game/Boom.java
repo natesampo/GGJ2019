@@ -7,7 +7,7 @@ import game.GameObject.Animations;
 
 public class Boom extends GameObject {
 
-	public Ship ship;
+	public GameObject ship;
 	public int heading;
 	public boolean right;
 	public boolean impact = false;
@@ -34,9 +34,10 @@ public class Boom extends GameObject {
 	/**
 	 * Something was hit by a cannon
 	 */
-	public Boom(int x, int y) {
-		super(x, y);
+	public Boom(GameObject obj) {
+		super(obj.x, obj.y);
 		this.z = 4;
+		this.ship = obj;
 		this.impact = true;
 	}
 
@@ -44,6 +45,12 @@ public class Boom extends GameObject {
 	public void update(Game game, double dt) {
 		this.xreal = ship.xreal;
 		this.yreal = ship.yreal;
+		if(impact) {
+			if(this.sprite.animate(Animations.BOOM2, dt)) {
+				Game.sprites.remove(this);
+			}
+			return;
+		}
 		if(this.sprite.animate(Animations.BOOM, dt, (heading==270?2:0)+(heading/90)%2+((heading/90)%2==0?1:0)*(right?2:0))) {
 			Game.sprites.remove(this);
 		}

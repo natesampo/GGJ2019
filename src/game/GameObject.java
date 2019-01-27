@@ -31,6 +31,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 		ENEMY2("Enemy2", 4, 4),
 		ENEMY3("Enemy3", 4, 4),
 		CURRENT("FlowRight", 8, 8),
+		BOOM2("Boom", 8, 8),
 		MINE("Mine", 8, 8);
 		
 		public String filename;

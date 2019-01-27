@@ -152,6 +152,7 @@ public class Ship extends GameObject {
 			GameObject obj = Game.grid[x][y];
 			if(obj instanceof Tile) {
 				if(((Tile)obj).type == 3) {
+					Game.sprites.add(new Boom(obj));
 					return true;
 				}
 			}
@@ -165,6 +166,7 @@ public class Ship extends GameObject {
 	
 	public void hit() {
 		health--;
+		Game.sprites.add(new Boom(this));
 		if(health <= 0) {
 			kill = true;
 		}
@@ -210,7 +212,20 @@ public class Ship extends GameObject {
 		return false;
 	}
 	
-
+	public boolean collideNoShips(int x, int y) {
+		if(Game.grid[x][y]!=null) {
+			GameObject obj = Game.grid[x][y];
+			if(obj instanceof Tile) {
+				switch(((Tile)obj).type) {
+					case 2: return true;
+					case 3: return true;
+					case 4: return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public boolean collideNoMines(int x, int y) {
 		if(Game.grid[x][y]!=null) {
 			GameObject obj = Game.grid[x][y];
