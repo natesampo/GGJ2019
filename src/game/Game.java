@@ -2,12 +2,14 @@ package game;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -47,6 +49,8 @@ public class Game {
 	public double startBars, loadTime;
 
 	public String levelText = "";
+	
+	public Font font;
 
 	public static void main(String[] args) {
 		Game game = new Game();
@@ -103,6 +107,19 @@ public class Game {
 	 * Start the timer
 	 */
 	public void start() {
+		
+		//font = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getClassLoader().getResourceAsStream("PiratesBay.ttf").deriveFont(50f);
+		try {
+			font = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getClassLoader().getResourceAsStream("PiratesBay.ttf")).deriveFont(50f);
+		} catch (FontFormatException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		
 		isRunning = true;
 		long then = System.nanoTime();
 		long now = then;
@@ -200,7 +217,8 @@ public class Game {
 			g.fillRect(0, HEIGHT - (int) startBars, WIDTH, 170);
 
 			g.setColor(Color.WHITE);
-			g.setFont(new Font("ConvincingPirate.tff", Font.PLAIN, 32));
+			g.setFont(new Font("Convincing Pirate", Font.PLAIN, 32));
+
 			g.drawString(levelText, 200, HEIGHT - 70);
 		}
 
