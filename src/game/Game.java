@@ -763,7 +763,7 @@ public class Game {
 		if(player.actionsLeft <= 0) {
 			yourTurn = false;
 			player.followCurrent();
-			delay = .5;
+			delay = .3;
 		}
 	}
 
