@@ -24,7 +24,7 @@ public class Ship extends GameObject {
 		this.sprite.framerate = 8;
 		if(type==0) {
 			this.z = 3;
-			this.health = 3;
+			this.health = 1;
 		}
 		Game.grid[x][y] = this;
 	}
