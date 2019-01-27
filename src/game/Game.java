@@ -56,6 +56,8 @@ public class Game {
 	public String levelText2 = "";
 	public Font pirateFont;
 
+	public int progress = 1;
+
 	public static void main(String[] args) {
 		Game game = new Game();
 		game.start();
@@ -174,7 +176,7 @@ public class Game {
 		long then = System.nanoTime();
 		long now = then;
 		long dt;
-		loadLevel("1.1");
+		loadLevel(getLevel(progress));
 		while (isRunning) {
 			now = System.nanoTime();
 			dt = now - then;
@@ -231,6 +233,13 @@ public class Game {
 		if (!yourTurn) {
 			theirTurn();
 			yourTurn = true;
+		}
+		// Change level
+		if(player.kill) {
+			loadLevel(getLevel(progress));
+		} else if(enemyCount()==0) {
+			progress++;
+			loadLevel(getLevel(progress));
 		}
 		lock = false;
 	}
@@ -477,5 +486,39 @@ public class Game {
 			}
 		}
 		return i;
+	}
+
+	public String getLevel(int lvNum) {
+
+		switch (lvNum) {
+
+		case 1:
+			return ("1.1");
+		case 2:
+			return ("1.2");
+		case 3:
+			return ("1.3");
+		case 4:
+			return ("1.4");
+		case 5:
+			return ("2.1");
+		case 6:
+			return ("2.2");
+		case 7:
+			return ("3.1");
+		case 8:
+			return ("3.2");
+		case 9:
+			return ("3.3");
+		case 10:
+			return ("4.1");
+		case 11:
+			return ("4.2");
+		case 12:
+			return ("4.3");
+		default:
+			return ("");
+
+		}
 	}
 }
