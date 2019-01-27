@@ -71,6 +71,19 @@ public abstract class GameObject implements Comparable<GameObject> {
 		if(!visible) return;
 		g.translate((int)(xreal*SCALE)+SCALE/2+XOFFSET, (int)(yreal*SCALE)+SCALE/2+YOFFSET);
 		sprite.draw(g, this);
+		
+		if (this instanceof Ship) {
+			if (((Ship) this).type == 0) {
+				for (int i=0; i<((Ship) this).actionsLeft; i++) {
+					g.drawImage(((Ship) this).actionbar.getFrame(0), i*16 - 8*((Ship) this).actions, -64, null);
+				}
+			} else {
+				for (int i=0; i<((Ship) this).health; i++) {
+					g.drawImage(((Ship) this).hpbarsmall.getFrame(0), i*16 - 8*((Ship) this).health, -64, null);
+				}
+			}
+		}
+		
 		g.translate(-(int)(xreal*SCALE)-SCALE/2-XOFFSET, -(int)(yreal*SCALE)-SCALE/2-YOFFSET);
 	}
 	

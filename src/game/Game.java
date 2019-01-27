@@ -27,7 +27,7 @@ public class Game {
 
 	private JFrame frame;
 	public Camera camera;
-	public static final String NAME = "Lost Treasure";
+	public static final String NAME = "Broadside";
 	public static final int WIDTH = 1200; // window width pixels
 	public static final int HEIGHT = 900; // window height pixels
 	public static final int W = 12; // grid width
@@ -39,11 +39,11 @@ public class Game {
 	public int windowHeight;
 	public boolean isRunning;
 	public static Ship player;
+	private SpriteSheet hpbar, hpbarheart;
 
 	public boolean yourTurn = true;
 	public boolean lock = false;
 	public int keyLock = 0;
-	public int actionsLeft = 0;
 	public static GameObject[][] grid = new GameObject[W][H];
 	public static int[][] currentGrid = new int[W][H];
 
@@ -142,12 +142,12 @@ public class Game {
 						switch(button.onClick) {
 							case 0:
 								if (yourTurn) {
-									actionsLeft--;
+									player.actionsLeft--;
 									player.portLoaded = true;
 									buttons.add(new Button(1050, 350, 128, 64, 1));
 									buttons.remove(i);
 									
-									if(actionsLeft <= 0) {
+									if(player.actionsLeft <= 0) {
 										yourTurn = false;
 										player.followCurrent();
 									}
@@ -155,12 +155,12 @@ public class Game {
 								break;
 							case 1:
 								if (yourTurn) {
-									actionsLeft--;
+									player.actionsLeft--;
 									player.shoot("port");
 									buttons.add(new Button(1050, 350, 128, 64, 0));
 									buttons.remove(i);
 									
-									if(actionsLeft <= 0) {
+									if(player.actionsLeft <= 0) {
 										yourTurn = false;
 										player.followCurrent();
 									}
@@ -168,12 +168,12 @@ public class Game {
 								break;
 							case 2:
 								if (yourTurn) {
-									actionsLeft--;
+									player.actionsLeft--;
 									player.starboardLoaded = true;
 									buttons.add(new Button(1050, 425, 128, 64, 3));
 									buttons.remove(i);
 									
-									if(actionsLeft <= 0) {
+									if(player.actionsLeft <= 0) {
 										yourTurn = false;
 										player.followCurrent();
 									}
@@ -181,12 +181,12 @@ public class Game {
 								break;
 							case 3:
 								if (yourTurn) {
-									actionsLeft--;
+									player.actionsLeft--;
 									player.shoot("starboard");
 									buttons.add(new Button(1050, 425, 128, 64, 2));
 									buttons.remove(i);
 									
-									if(actionsLeft <= 0) {
+									if(player.actionsLeft <= 0) {
 										yourTurn = false;
 										player.followCurrent();
 									}
@@ -202,6 +202,9 @@ public class Game {
 			}
 		});
 
+		hpbar = new SpriteSheet("hp_bar.png", 1, 1);
+		hpbarheart = new SpriteSheet("hp_bar_heart.png", 1, 1);
+		
 		buttons.add(new Button(1050, 350, 128, 64, 0));
 		buttons.add(new Button(1050, 425, 128, 64, 2));
 
@@ -304,7 +307,7 @@ public class Game {
 		}
 		if (!yourTurn) {
 			theirTurn();
-			actionsLeft = player.actions;
+			player.actionsLeft = player.actions;
 			yourTurn = true;
 		}
 		// Change level
@@ -361,7 +364,19 @@ public class Game {
 		g2.scale(1 / camera.get_zoom(), 1 / camera.get_zoom());
 		g2.translate((int) -(camera.get_x_pos() + WIDTH / (2 * camera.get_zoom())),
 				(int) -(camera.get_y_pos() + HEIGHT / (2 * camera.get_zoom())));
-
+		
+		for (Button button : buttons) {
+			button.draw(g);
+		}
+		
+		g.drawImage(hpbar.getFrame(0), 8, 8, null);
+		
+		if (player != null) {
+			for (int i=0; i<player.health; i++) {
+				g.drawImage(hpbarheart.getFrame(0), 102 + 50*i, 8, null);
+			}
+		}
+		
 		// black stuff
 		if (startBars > 0) {
 			g.setColor(Color.DARK_GRAY);
@@ -376,16 +391,9 @@ public class Game {
 			
 			g.setFont(pirateFontBig);
 
-			g.drawString(levelText3, 110, -62 + (int)startBars);
-
-			
+			g.drawString(levelText3, 110, -62 + (int)startBars);			
 		}
-		try {
-			for (Button button : buttons) {
-				button.draw(g);
-			}
-		} catch(Exception e) {
-		}
+		
 		lock = false;
 	}
 
@@ -395,30 +403,46 @@ public class Game {
 		switch (ke.getKeyCode()) {
 			case KeyEvent.VK_W:
 			case KeyEvent.VK_UP:
-				if (player.moveUp()) actionsLeft--;
+				if (player.moveUp()) player.actionsLeft--;
 				break;
 			case KeyEvent.VK_S:
 			case KeyEvent.VK_DOWN:
-				if (player.moveDown()) actionsLeft--;
+				if (player.moveDown()) player.actionsLeft--;
 				break;
 			case KeyEvent.VK_A:
 			case KeyEvent.VK_LEFT:
-				if (player.moveLeft()) actionsLeft--;
+				if (player.moveLeft()) player.actionsLeft--;
 				break;
 			case KeyEvent.VK_D:
 			case KeyEvent.VK_RIGHT:
-				if (player.moveRight()) actionsLeft--;
+				if (player.moveRight()) player.actionsLeft--;
 				break;
 			case KeyEvent.VK_SPACE:
 				if (player.portLoaded) {
-					actionsLeft--;
+					player.actionsLeft--;
 					player.shoot("port");
 					player.portLoaded = false;
+					
+					for (int i=0; i<buttons.size(); i++) {
+						if (buttons.get(i).onClick == 1) {
+							buttons.remove(i);
+							buttons.add(new Button(1050, 350, 128, 64, 0));
+							break;
+						}
+					}
 				}
 				if (player.starboardLoaded) {
-					actionsLeft--;
+					player.actionsLeft--;
 					player.shoot("starboard");
 					player.starboardLoaded = false;
+					
+					for (int i=0; i<buttons.size(); i++) {
+						if (buttons.get(i).onClick == 3) {
+							buttons.remove(i);
+							buttons.add(new Button(1050, 425, 128, 64, 2));
+							break;
+						}
+					}
 				}
 				break;
 			case KeyEvent.VK_P:
@@ -426,7 +450,7 @@ public class Game {
 				loadLevel(getLevel(progress));
 				break;
 		}
-		if(actionsLeft <= 0) {
+		if(player.actionsLeft <= 0) {
 			yourTurn = false;
 			player.followCurrent();
 		}
@@ -518,7 +542,7 @@ public class Game {
 						break;
 					case 'S':
 						player = new Ship(x, y, 0, 0);
-						actionsLeft = player.actions;
+						player.actionsLeft = player.actions;
 						sprites.add(player);
 						sprites.add(new Tile(x, y, 1));
 						break;
