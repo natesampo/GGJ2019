@@ -27,12 +27,14 @@ public class Ship extends GameObject {
 		this.sprite.framerate = 8;
 		this.portLoaded = false;
 		this.starboardLoaded = false;
-		this.actions = 3;
+		this.actions = 1;
 		this.actionsLeft = this.actions;
 		this.actionbar = new SpriteSheet("hp_bar_rect.png", 1, 1);
 		this.hpbarsmall = new SpriteSheet("hp_bar_small.png", 1, 1);
 		if(type==0) {
 			this.z = 3;
+			this.actions = 2;
+			this.actionsLeft = this.actions;
 		}
 		Game.grid[x][y] = this;
 	}

@@ -21,7 +21,6 @@ import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import game.GameObject;
 import game.GameObject.Animations;
 
 public class Game {
@@ -42,6 +41,7 @@ public class Game {
 	public static Ship player;
 	private SpriteSheet hpbar, hpbarheart, gold;
 
+	public String highlight = "0";
 	public boolean yourTurn = true;
 	public boolean lock = true;
 	public int keyLock = 0;
@@ -119,6 +119,33 @@ public class Game {
 
 			@Override
 			public void mouseMoved(MouseEvent me) {
+				int mouseX = me.getX();
+				int mouseY = me.getY() - 25;
+				
+				highlight = "";
+				for (int i=buttons.size()-1; i>=0; i--) {
+					Button button = buttons.get(i);
+					if (mouseX > button.x && mouseX < button.x + button.width && mouseY > button.y
+							&& mouseY < button.y + button.height) {
+						switch(button.onClick) {
+							case 0:
+								highlight = "port";
+								break;
+							case 1:
+								highlight = "port";
+								break;
+							case 2:
+								highlight = "starboard";
+								break;
+							case 3:
+								highlight = "starboard";
+								break;
+							case 4:
+								highlight = "mine";
+								break;
+						}
+					}
+				}
 			}
 		});
 		frame.addMouseListener(new MouseListener() {
@@ -139,6 +166,10 @@ public class Game {
 			public void mousePressed(MouseEvent me) {
 				int mouseX = me.getX();
 				int mouseY = me.getY() - 25;
+				
+				System.out.println("mouseX: " + mouseX);
+				System.out.println("mouseY: " + mouseX);
+				
 				for (int i=buttons.size()-1; i>=0; i--) {
 					Button button = buttons.get(i);
 					if (mouseX > button.x && mouseX < button.x + button.width && mouseY > button.y
@@ -399,8 +430,121 @@ public class Game {
 				}
 			}
 		}
+		
 		for (GameObject sprite : sprites) {
-			if(sprite!=null) sprite.draw(g);
+			if(sprite!=null && sprite instanceof Tile) sprite.draw(g);
+		}
+		
+		switch(highlight) {
+			case "port":
+				g.translate((int)(player.xreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.XOFFSET, (int)(player.yreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.YOFFSET);
+				
+				if (player.heading == 0) {
+					for (int i=0; i<=player.y-2; i++) {
+						g.setColor(new Color(255, 0, 0, 55));
+						g.fillRect(-GameObject.XOFFSET, -16 - GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
+						
+						if ((grid[player.x][player.y - i - 1] instanceof Tile && ((Tile) grid[player.x][player.y - i - 1]).type == 3) || (grid[player.x][player.y - i - 1] instanceof Ship)) {
+							break;
+						}
+					}
+				} else if (player.heading == 90) {
+					for (int i=0; i<=player.x-1; i++) {
+						g.setColor(new Color(255, 0, 0, 55));
+						g.fillRect(-GameObject.XOFFSET - GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
+						
+						if ((grid[player.x - i - 1][player.y] instanceof Tile && ((Tile) grid[player.x - i - 1][player.y]).type == 3) || (grid[player.x - i - 1][player.y] instanceof Ship)) {
+							break;
+						}
+					}
+				} else if (player.heading == 180) {
+					for (int i=0; i<=H-player.y-2; i++) {
+						g.setColor(new Color(255, 0, 0, 55));
+						g.fillRect(-GameObject.XOFFSET, -16 + GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
+						
+						if ((grid[player.x][player.y + i + 1] instanceof Tile && ((Tile) grid[player.x][player.y + i + 1]).type == 3) || (grid[player.x][player.y + i + 1] instanceof Ship)) {
+							break;
+						}
+					}
+				} else if (player.heading == 270) {
+					for (int i=0; i<=W-player.x-2; i++) {
+						g.setColor(new Color(255, 0, 0, 55));
+						g.fillRect(-GameObject.XOFFSET + GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
+						
+						if ((grid[player.x + i + 1][player.y] instanceof Tile && ((Tile) grid[player.x + i + 1][player.y]).type == 3) || (grid[player.x + i + 1][player.y] instanceof Ship)) {
+							break;
+						}
+					}
+				}
+				
+				g.translate(-(int)(player.xreal*GameObject.SCALE)-GameObject.SCALE/2-GameObject.XOFFSET, -(int)(player.yreal*GameObject.SCALE)-GameObject.SCALE/2-GameObject.YOFFSET);
+				break;
+			case "starboard":
+				g.translate((int)(player.xreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.XOFFSET, (int)(player.yreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.YOFFSET);
+				
+				if (player.heading == 0) {
+					for (int i=0; i<=H-player.y-2; i++) {
+						g.setColor(new Color(255, 0, 0, 55));
+						g.fillRect(-GameObject.XOFFSET, -16 + GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
+						
+						if ((grid[player.x][player.y + i + 1] instanceof Tile && ((Tile) grid[player.x][player.y + i + 1]).type == 3) || (grid[player.x][player.y + i + 1] instanceof Ship)) {
+							break;
+						}
+					}
+				} else if (player.heading == 90) {
+					for (int i=0; i<=W-player.x-2; i++) {
+						g.setColor(new Color(255, 0, 0, 55));
+						g.fillRect(-GameObject.XOFFSET + GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
+						
+						if ((grid[player.x + i + 1][player.y] instanceof Tile && ((Tile) grid[player.x + i + 1][player.y]).type == 3) || (grid[player.x + i + 1][player.y] instanceof Ship)) {
+							break;
+						}
+					}
+				} else if (player.heading == 180) {
+					for (int i=0; i<=player.y-2; i++) {
+						g.setColor(new Color(255, 0, 0, 55));
+						g.fillRect(-GameObject.XOFFSET, -16 - GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
+						
+						if ((grid[player.x][player.y - i - 1] instanceof Tile && ((Tile) grid[player.x][player.y - i - 1]).type == 3) || (grid[player.x][player.y - i - 1] instanceof Ship)) {
+							break;
+						}
+					}
+				} else if (player.heading == 270) {
+					for (int i=0; i<=player.x-1; i++) {
+						g.setColor(new Color(255, 0, 0, 55));
+						g.fillRect(-GameObject.XOFFSET - GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
+						
+						if ((grid[player.x - i - 1][player.y] instanceof Tile && ((Tile) grid[player.x - i - 1][player.y]).type == 3) || (grid[player.x - i - 1][player.y] instanceof Ship)) {
+							break;
+						}
+					}
+				}
+				
+				g.translate(-(int)(player.xreal*GameObject.SCALE)-GameObject.SCALE/2-GameObject.XOFFSET, -(int)(player.yreal*GameObject.SCALE)-GameObject.SCALE/2-GameObject.YOFFSET);
+				break;
+			case "mine":
+g.translate((int)(player.xreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.XOFFSET, (int)(player.yreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.YOFFSET);
+				
+				if (player.heading == 0) {
+					g.setColor(new Color(255, 0, 0, 55));
+					g.fillRect(-GameObject.XOFFSET - GameObject.SCALE, -16, GameObject.SCALE, GameObject.SCALE);
+				} else if (player.heading == 90) {
+					g.setColor(new Color(255, 0, 0, 55));
+					g.fillRect(-GameObject.XOFFSET, -16 + GameObject.SCALE, GameObject.SCALE, GameObject.SCALE);
+				} else if (player.heading == 180) {
+					g.setColor(new Color(255, 0, 0, 55));
+					g.fillRect(-GameObject.XOFFSET + GameObject.SCALE, -16, GameObject.SCALE, GameObject.SCALE);
+				} else if (player.heading == 270) {
+					g.setColor(new Color(255, 0, 0, 55));
+					g.fillRect(-GameObject.XOFFSET, -16 - GameObject.SCALE, GameObject.SCALE, GameObject.SCALE);
+				}
+				
+				g.translate(-(int)(player.xreal*GameObject.SCALE)-GameObject.SCALE/2-GameObject.XOFFSET, -(int)(player.yreal*GameObject.SCALE)-GameObject.SCALE/2-GameObject.YOFFSET);
+				break;
+		}
+		
+		for (GameObject sprite : sprites) {
+			if(sprite!=null && !(sprite instanceof Tile)) sprite.draw(g);
 		}
 
 		g2.scale(1 / camera.get_zoom(), 1 / camera.get_zoom());
@@ -411,8 +555,11 @@ public class Game {
 			button.draw(g);
 		}
 		
-		g.drawImage(hpbar.getFrame(0), 8, 8, null);
-		g.drawImage(gold.getFrame(0), 8, 68, null);
+		try {
+			g.drawImage(hpbar.getFrame(0), 8, 8, null);
+			g.drawImage(gold.getFrame(0), 8, 68, null);
+		} catch (Exception e) {
+		}
 		
 		if (player != null) {
 			for (int i=0; i<player.health; i++) {
