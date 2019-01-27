@@ -39,7 +39,7 @@ public class Game {
 	public int windowHeight;
 	public boolean isRunning;
 	public static Ship player;
-	private SpriteSheet hpbar, hpbarheart;
+	private SpriteSheet hpbar, hpbarheart, gold;
 
 	public boolean yourTurn = true;
 	public boolean lock = false;
@@ -57,7 +57,7 @@ public class Game {
 	public String levelText = "";
 	public String levelText2 = "";
 	public String levelText3 = "";
-	public Font pirateFont, pirateFontBig;
+	public Font pirateFont, pirateFontBig, pirateFontGold;
 
 	public int progress = 1;
 
@@ -192,6 +192,17 @@ public class Game {
 									}
 								}
 								break;
+							case 4:
+								if (yourTurn) {								
+									player.actionsLeft--;
+									sprites.add(new Tile(player.x, player.y, 4));
+									
+									if(player.actionsLeft <= 0) {
+										yourTurn = false;
+										player.followCurrent();
+									}
+								}
+								break;
 						}
 					}
 				}
@@ -204,9 +215,7 @@ public class Game {
 
 		hpbar = new SpriteSheet("hp_bar.png", 1, 1);
 		hpbarheart = new SpriteSheet("hp_bar_heart.png", 1, 1);
-		
-		buttons.add(new Button(1050, 350, 128, 64, 0));
-		buttons.add(new Button(1050, 425, 128, 64, 2));
+		gold = new SpriteSheet("Doubloon.png", 1, 1);
 
 		AudioPlayer music = new AudioPlayer("OpenSource.wav");
 		music.play();
@@ -237,6 +246,19 @@ public class Game {
 					.createFont(Font.TRUETYPE_FONT,
 							this.getClass().getClassLoader().getResourceAsStream("ConvincingPirate.ttf"))
 					.deriveFont(85f);
+		} catch (FontFormatException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			pirateFontGold = Font
+					.createFont(Font.TRUETYPE_FONT,
+							this.getClass().getClassLoader().getResourceAsStream("ConvincingPirate.ttf"))
+					.deriveFont(64f);
 		} catch (FontFormatException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -291,6 +313,7 @@ public class Game {
 			if(g==null) return;
 			if (g.kill) {
 				if (g instanceof Ship) {
+					player.gold += ((Ship) g).gold;
 					grid[g.x][g.y] = null;
 					sprites.remove(g);
 					i--;
@@ -370,11 +393,16 @@ public class Game {
 		}
 		
 		g.drawImage(hpbar.getFrame(0), 8, 8, null);
+		g.drawImage(gold.getFrame(0), 8, 68, null);
 		
 		if (player != null) {
 			for (int i=0; i<player.health; i++) {
 				g.drawImage(hpbarheart.getFrame(0), 102 + 50*i, 8, null);
 			}
+			
+			g.setColor(new Color(120, 120, 120));
+			g.setFont(pirateFontGold);
+			g.drawString("" + player.gold, 78, 114);
 		}
 		
 		// black stuff
@@ -445,6 +473,7 @@ public class Game {
 					}
 				}
 				break;
+				
 			case KeyEvent.VK_P:
 				progress++;
 				loadLevel(getLevel(progress));
@@ -541,10 +570,23 @@ public class Game {
 						sprites.add(new Tile(x, y, 1));
 						break;
 					case 'S':
+						int tempGold = 0;
+						int temphp = Ship.playerhp;
+						if (player!=null) {
+							tempGold = player.gold;
+							
+							if (player.health > 0) {
+								temphp = player.health;
+							}
+						}
 						player = new Ship(x, y, 0, 0);
-						player.actionsLeft = player.actions;
+						player.health = temphp;
+						player.gold = tempGold;
 						sprites.add(player);
 						sprites.add(new Tile(x, y, 1));
+						buttons.add(new Button(1050, 350, 128, 64, 0));
+						buttons.add(new Button(1050, 425, 128, 64, 2));
+						buttons.add(new Button(1050, 535, 128, 64, 4));
 						break;
 					case '~':
 						sprites.add(new Tile(x, y, 1));

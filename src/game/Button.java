@@ -26,6 +26,9 @@ public class Button {
 			case 3:
 				this.spritesheet = new SpriteSheet("ButtonStarboardFire.png", 1, 1);
 				break;
+			case 4:
+				this.spritesheet = new SpriteSheet("ButtonMine.png", 1, 1);
+				break;
 		}
 	}
 

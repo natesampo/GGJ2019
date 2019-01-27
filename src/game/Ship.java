@@ -5,9 +5,10 @@ import java.awt.Graphics;
 public class Ship extends GameObject {
 	public int heading, type;
 	public double bounceX = 0, bounceY = 0;
-	public int health, actions, actionsLeft;
+	public int health, actions, actionsLeft, gold;
 	public boolean portLoaded, starboardLoaded;
 	public SpriteSheet actionbar, hpbarsmall;
+	static int playerhp = 5;
 	
 	/**
 	 * Creates a new ship. 
@@ -22,6 +23,7 @@ public class Ship extends GameObject {
 		this.type = type;
 		this.z = 2;
 		this.health = type;
+		this.gold = type;
 		this.sprite.framerate = 8;
 		this.portLoaded = false;
 		this.starboardLoaded = false;
@@ -31,7 +33,6 @@ public class Ship extends GameObject {
 		this.hpbarsmall = new SpriteSheet("hp_bar_small.png", 1, 1);
 		if(type==0) {
 			this.z = 3;
-			this.health = 5;
 		}
 		Game.grid[x][y] = this;
 	}
