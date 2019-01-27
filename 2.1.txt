@@ -6,9 +6,9 @@
 >>>>>S>>>>>x
 >>>>>>>>>>xx
 >>>>>>>>>>>x
->>>E>>>>>>>x
+>>>a>>>>>>>x
 >>>>>>>>>>>X
 >x>>>>>>>>xx
 >>>>>>~>>>>x
-You followed a fleeing carvel to Shimmermist falls.
+You followed a fleeing Caravel to Shimmermist falls.
 The strong rapids threaten to pull both you and your prey over.

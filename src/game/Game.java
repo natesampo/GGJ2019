@@ -161,7 +161,7 @@ public class Game {
 			pirateFont = Font
 					.createFont(Font.TRUETYPE_FONT,
 							this.getClass().getClassLoader().getResourceAsStream("ConvincingPirate.ttf"))
-					.deriveFont(30f);
+					.deriveFont(26f);
 		} catch (FontFormatException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -174,7 +174,7 @@ public class Game {
 		long then = System.nanoTime();
 		long now = then;
 		long dt;
-		loadLevel("2.2");
+		loadLevel("1.1");
 		while (isRunning) {
 			now = System.nanoTime();
 			dt = now - then;
@@ -204,21 +204,21 @@ public class Game {
 			return;
 		lock = true;
 
-		if (startBars >= 0 && System.currentTimeMillis() - loadTime > 2750) {
-			startBars = startBars - dt * 100;
+		if (startBars >= 0 && System.currentTimeMillis() - loadTime > 3500) {
+			startBars = startBars - dt * 150;
 		}
 		// Put code for user interface before camera update, so slowdowns
 		// don't affect UI elements.
 		dt = camera.update(dt); // dt changes values here based on camera speed
-		for(int i=0; i<sprites.size();i++) {
+		for (int i = 0; i < sprites.size(); i++) {
 			GameObject g = sprites.get(i);
-			if(g.kill) {
-				if(g instanceof Ship) {
+			if (g.kill) {
+				if (g instanceof Ship) {
 					grid[g.x][g.y] = null;
 					sprites.remove(g);
 					i--;
 				}
-				if(g instanceof Tile) {
+				if (g instanceof Tile) {
 					sprites.remove(g);
 				}
 			}
@@ -228,7 +228,7 @@ public class Game {
 		for (int i = 0; i < sprites.size(); i++) {
 			sprites.get(i).update(this, dt);
 		}
-		if(!yourTurn) {
+		if (!yourTurn) {
 			theirTurn();
 			yourTurn = true;
 		}
@@ -289,8 +289,8 @@ public class Game {
 			g.setColor(Color.WHITE);
 			g.setFont(pirateFont);
 
-			g.drawString(levelText, 130, HEIGHT + 60 - (int)startBars);
-			g.drawString(levelText2, 130, HEIGHT + 100 - (int)startBars);
+			g.drawString(levelText, 110, HEIGHT + 60 - (int) startBars);
+			g.drawString(levelText2, 110, HEIGHT + 100 - (int) startBars);
 		}
 		try {
 			for (Button button : buttons) {
@@ -302,7 +302,8 @@ public class Game {
 	}
 
 	public void takeTurn(KeyEvent ke) {
-		if(player.kill) return;
+		if (player.kill)
+			return;
 		switch (ke.getKeyCode()) {
 		case KeyEvent.VK_W:
 		case KeyEvent.VK_UP:
@@ -335,11 +336,11 @@ public class Game {
 			Sprite.loadAnimation(a);
 		}
 	}
-	
+
 	public void theirTurn() {
-		for(int i=0; i<sprites.size(); i++) {
+		for (int i = 0; i < sprites.size(); i++) {
 			GameObject g = sprites.get(i);
-			if(g instanceof Ship && !g.equals(player)) {
+			if (g instanceof Ship && !g.equals(player)) {
 				((Ship) g).move();
 			}
 		}
@@ -358,12 +359,56 @@ public class Game {
 				for (int x = 0; x < s.length(); x++) {
 					char c = s.charAt(x);
 					switch (c) {
-					case 'E':
-						sprites.add(new Ship(x, y, 90 * ((int) (Math.random() * 4)), 1));
+					case '1':
+						sprites.add(new Ship(x, y, 0, 1));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case '2':
+						sprites.add(new Ship(x, y, 90, 1));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case '3':
+						sprites.add(new Ship(x, y, 180, 1));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case '4':
+						sprites.add(new Ship(x, y, 270, 1));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case 'q':
+						sprites.add(new Ship(x, y, 0, 2));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case 'w':
+						sprites.add(new Ship(x, y, 90, 2));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case 'e':
+						sprites.add(new Ship(x, y, 180, 2));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case 'r':
+						sprites.add(new Ship(x, y, 270, 2));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case 'a':
+						sprites.add(new Ship(x, y, 0, 3));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case 's':
+						sprites.add(new Ship(x, y, 90, 3));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case 'd':
+						sprites.add(new Ship(x, y, 180, 3));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case 'f':
+						sprites.add(new Ship(x, y, 270, 3));
 						sprites.add(new Tile(x, y, 1));
 						break;
 					case 'S':
-						player = new Ship(x, y, 90 * ((int) (Math.random() * 4)), 0);
+						player = new Ship(x, y, 0, 0);
 						sprites.add(player);
 						sprites.add(new Tile(x, y, 1));
 						break;
@@ -410,8 +455,9 @@ public class Game {
 			}
 			if (in.hasNext()) {
 				levelText = in.nextLine();
+			}
+			if (in.hasNext()) {
 				levelText2 = in.nextLine();
-			
 			}
 
 			System.out.println(levelText);
