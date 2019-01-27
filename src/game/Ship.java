@@ -136,6 +136,11 @@ public class Ship extends GameObject {
 		if(collide(x, y)) {
 			if(Game.grid[x][y] instanceof Tile) {
 				hit();
+				if(((Tile)Game.grid[x][y]).type==4) {
+					Game.grid[x][y].kill = true;
+					Game.grid[x][y] = this;
+					return;
+				}
 			}
 			bounceX = Math.signum(dx)*0.5;
 			bounceY = Math.signum(dy)*0.5;
@@ -152,6 +157,7 @@ public class Ship extends GameObject {
 				switch(((Tile)obj).type) {
 					case 2: return true;
 					case 3: return true;
+					case 4: return true;
 				}
 			}
 			if(obj instanceof Ship) {
@@ -162,7 +168,6 @@ public class Ship extends GameObject {
 	}
 	
 	public void move() {
-		if(kill) return;
 		Ship p = Game.player;
 		int dx = p.x-x;
 		int dy = p.y-y;

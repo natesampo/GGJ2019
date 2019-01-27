@@ -27,7 +27,7 @@ public class Game {
 
 	private JFrame frame;
 	public Camera camera;
-	public static final String NAME = "Come on and jam";
+	public static final String NAME = "Lost Treasure";
 	public static final int WIDTH = 1200; // window width pixels
 	public static final int HEIGHT = 900; // window height pixels
 	public static final int W = 12; // grid width
@@ -40,7 +40,7 @@ public class Game {
 	public boolean isRunning;
 	public static Ship player;
 
-	public boolean yourTurn = false;
+	public boolean yourTurn = true;
 	public boolean lock = false;
 	public int keyLock = 0;
 	public static GameObject[][] grid = new GameObject[W][H];
@@ -212,10 +212,15 @@ public class Game {
 		dt = camera.update(dt); // dt changes values here based on camera speed
 		for(int i=0; i<sprites.size();i++) {
 			GameObject g = sprites.get(i);
-			if(sprites.get(i).kill) {
-				grid[g.x][g.y] = null;
-				sprites.remove(g);
-				i--;
+			if(g.kill) {
+				if(g instanceof Ship) {
+					grid[g.x][g.y] = null;
+					sprites.remove(g);
+					i--;
+				}
+				if(g instanceof Tile) {
+					sprites.remove(g);
+				}
 			}
 		}
 		Collections.sort(sprites); // Draw in order of y position
@@ -223,7 +228,10 @@ public class Game {
 		for (int i = 0; i < sprites.size(); i++) {
 			sprites.get(i).update(this, dt);
 		}
-		yourTurn = true;
+		if(!yourTurn) {
+			theirTurn();
+			yourTurn = true;
+		}
 		lock = false;
 	}
 
@@ -293,6 +301,7 @@ public class Game {
 	}
 
 	public void takeTurn(KeyEvent ke) {
+		if(player.kill) return;
 		switch (ke.getKeyCode()) {
 		case KeyEvent.VK_W:
 		case KeyEvent.VK_UP:
@@ -314,9 +323,6 @@ public class Game {
 			yourTurn = false;
 			player.shoot();
 			break;
-		}
-		if(!yourTurn) {
-			theirTurn();
 		}
 	}
 

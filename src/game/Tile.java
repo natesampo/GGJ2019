@@ -15,7 +15,7 @@ public class Tile extends GameObject {
 			this.z = 0;
 			this.sprite.offset((int)(Math.random()*8));
 		}
-		if (type == 2||type==3) {
+		if (type == 2||type==3||type==4) {
 			Game.grid[x][y] = this;
 		}
 		switch(type) {
