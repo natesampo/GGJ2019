@@ -819,8 +819,10 @@ public class Game {
 	}
 
 	public void loadLevel(String name) {
-		mapShip.x = waypoints[progress][0];
-		mapShip.y = waypoints[progress][1];
+		if(progress<waypoints.length) {
+			mapShip.x = waypoints[progress][0];
+			mapShip.y = waypoints[progress][1];
+		}
 		System.out.println(progress);
 		map = new SpriteSheet("Level"+(progress)+"Map.png", 1, 1);
 		mapAlpha = 1;

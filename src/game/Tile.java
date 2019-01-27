@@ -22,6 +22,7 @@ public class Tile extends GameObject {
 		}
 		switch(type) {
 			case 3: rand = (int)(Math.random()*2); break;
+			case 4: sprite.framerate = 3;
 		}
 	}
 

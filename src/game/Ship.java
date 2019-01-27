@@ -192,6 +192,14 @@ public class Ship extends GameObject {
 					Game.grid[x][y] = this;
 					return;
 				}
+			} else if(Game.grid[x][y] instanceof Ship) {
+				Ship s = (Ship)Game.grid[x][y];
+				if(!(s.ram)) {
+					s.hit(1);
+				}
+				if(!ram) {
+					hit(1);
+				}
 			}
 			bounceX = Math.signum(dx)*0.5;
 			bounceY = Math.signum(dy)*0.5;
