@@ -43,6 +43,7 @@ public class Game {
 
 	public String highlight = "0";
 	public boolean yourTurn = true;
+	public double delay = 5;
 	public boolean lock = true;
 	public int keyLock = 0;
 	public static GameObject[][] grid = new GameObject[W][H];
@@ -52,6 +53,7 @@ public class Game {
 	public double test_local_time = 0;
 	public float mapAlpha = 1;
 	public double t = 0;
+	public int win = 0;
 
 	public static ArrayList<GameObject> sprites = new ArrayList<GameObject>();
 	public static ArrayList<Button> buttons = new ArrayList<Button>();
@@ -174,6 +176,7 @@ public class Game {
 					Button button = buttons.get(i);
 					if (mouseX > button.x && mouseX < button.x + button.width && mouseY > button.y
 							&& mouseY < button.y + button.height) {
+						if(delay>0) return;
 						switch(button.onClick) {
 							case 0:
 								if (yourTurn) {
@@ -349,6 +352,8 @@ public class Game {
 			return;
 		lock = true;
 		t += dt;
+		delay -= dt;
+		if(delay<0) delay = 0;
 		if(t>2) mapAlpha-=dt*5;
 		if(mapAlpha<0.3) mapAlpha = 0;
 		if (startBars >= 0 && System.currentTimeMillis() - loadTime > 5500) {
@@ -378,17 +383,29 @@ public class Game {
 			sprites.get(i).update(this, dt);
 		}
 		if (!yourTurn) {
-			theirTurn();
-			player.actionsLeft = player.actions;
-			yourTurn = true;
+			if(delay==0) {
+				theirTurn();
+				delay = 0.15;
+			}
 		}
 		// Change level
-		if(player.kill) {
-			loadLevel(getLevel(progress));
-		} else if(enemyCount()==0) {
+		if(win==1&&delay==0) {
+			win = 0;
 			progress++;
 			loadLevel(getLevel(progress));
 			Bar();
+			delay = 5;
+		}
+		if(win==-1&&delay==0) {
+			win = 0;
+			loadLevel(getLevel(progress));
+		}
+		if(player.kill&&win==0) {
+			delay = 1;
+			win = -1;
+		} else if(enemyCount()==0&&win==0) {
+			win = 1;
+			delay = 1;
 		}
 		lock = false;
 	}
@@ -595,7 +612,7 @@ g.translate((int)(player.xreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.X
 	}
 
 	public void takeTurn(KeyEvent ke) {
-		if (player.kill ||!yourTurn)
+		if (player.kill ||!yourTurn || delay>0)
 			return;
 		switch (ke.getKeyCode()) {
 			case KeyEvent.VK_W:
@@ -651,6 +668,7 @@ g.translate((int)(player.xreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.X
 		if(player.actionsLeft <= 0) {
 			yourTurn = false;
 			player.followCurrent();
+			delay = .5;
 		}
 	}
 
@@ -664,14 +682,28 @@ g.translate((int)(player.xreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.X
 	}
 
 	public void theirTurn() {
+		yourTurn = true;
 		for (int i = 0; i < sprites.size(); i++) {
 			GameObject g = sprites.get(i);
 			if (g instanceof Ship && !g.equals(player)) {
-				for (int j = 0; j < ((Ship) g).actions; j++) {
+				if(((Ship) g).actionsLeft>0) {
 					((Ship) g).move();
+					((Ship) g).actionsLeft--;
 				}
-				((Ship) g).followCurrent();
+				if(((Ship) g).actionsLeft>0) {
+					yourTurn = false;
+				}
 			}
+		}
+		if(yourTurn) {
+			for (int i = 0; i < sprites.size(); i++) {
+				GameObject g = sprites.get(i);
+				if (g instanceof Ship && !g.equals(player)) {
+					((Ship) g).followCurrent();
+					((Ship) g).actionsLeft = ((Ship) g).actions;
+				}
+			}
+			player.actionsLeft = player.actions;
 		}
 	}
 
