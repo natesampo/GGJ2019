@@ -37,6 +37,8 @@ public class Game {
 	public static final int mineCost = 5;
 	public static final int ramCost = 5;
 	public static final int damageCost = 4;
+	public static final int rangeCost = 2;
+	public static final int actionCost = 5;
 	public int MIN_STEP = 20000000;
 	public int windowWidth;
 	public int windowHeight;
@@ -265,6 +267,8 @@ public class Game {
 								buttons.add(new Button(10, 180, 128, 64, 8));
 								buttons.add(new Button(10, 258, 128, 64, 9));
 								buttons.add(new Button(10, 336, 128, 64, 10));
+								buttons.add(new Button(10, 414, 128, 64, 11));
+								buttons.add(new Button(10, 492, 128, 64, 12));
 								buttons.remove(i);
 								break;
 							case 7:
@@ -311,6 +315,18 @@ public class Game {
 									
 									buttons.add(new Button(1050, 535, 128, 64, 5));
 									buttons.remove(i);
+								}
+								break;
+							case 11:
+								if (player.gold >= rangeCost) {
+									player.gold -= rangeCost;
+									player.damage += 1;
+								}
+								break;
+							case 12:
+								if (player.gold >= actionCost) {
+									player.gold -= actionCost;
+									player.actions += 1;
 								}
 								break;
 						}
