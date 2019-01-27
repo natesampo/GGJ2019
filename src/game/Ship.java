@@ -162,7 +162,6 @@ public class Ship extends GameObject {
 	}
 	
 	public void move() {
-		if(kill) return;
 		Ship p = Game.player;
 		int dx = p.x-x;
 		int dy = p.y-y;

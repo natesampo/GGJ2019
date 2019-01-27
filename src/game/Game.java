@@ -40,7 +40,7 @@ public class Game {
 	public boolean isRunning;
 	public static Ship player;
 
-	public boolean yourTurn = false;
+	public boolean yourTurn = true;
 	public boolean lock = false;
 	public int keyLock = 0;
 	public static GameObject[][] grid = new GameObject[W][H];
@@ -52,7 +52,7 @@ public class Game {
 	public static ArrayList<Button> buttons = new ArrayList<Button>();
 	
 	public double startBars, loadTime;
-	public String levelText = "";	
+	public String levelText = "";
 	public Font pirateFont;
 
 	public static void main(String[] args) {
@@ -219,7 +219,10 @@ public class Game {
 		for (int i = 0; i < sprites.size(); i++) {
 			sprites.get(i).update(this, dt);
 		}
-		yourTurn = true;
+		if(!yourTurn) {
+			theirTurn();
+			yourTurn = true;
+		}
 		lock = false;
 	}
 
@@ -288,6 +291,7 @@ public class Game {
 	}
 
 	public void takeTurn(KeyEvent ke) {
+		if(player.kill) return;
 		switch (ke.getKeyCode()) {
 		case KeyEvent.VK_W:
 		case KeyEvent.VK_UP:
@@ -309,9 +313,6 @@ public class Game {
 			yourTurn = false;
 			player.shoot();
 			break;
-		}
-		if(!yourTurn) {
-			theirTurn();
 		}
 	}
 
