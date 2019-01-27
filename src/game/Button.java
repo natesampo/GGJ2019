@@ -45,12 +45,18 @@ public class Button {
 				this.spritesheet = new SpriteSheet("ButtonBuyRam.png", 1, 1);
 				break;
 			case 10:
-				this.spritesheet = new SpriteSheet("ButtonBuyMines.png", 1, 1);
+				this.spritesheet = new SpriteSheet("ButtonBuyRamDisabled.png", 1, 1);
 				break;
 			case 11:
-				this.spritesheet = new SpriteSheet("ButtonBuyRange.png", 1, 1);
+				this.spritesheet = new SpriteSheet("ButtonBuyMines.png", 1, 1);
 				break;
 			case 12:
+				this.spritesheet = new SpriteSheet("ButtonBuyMinesDisabled.png", 1, 1);
+				break;
+			case 13:
+				this.spritesheet = new SpriteSheet("ButtonBuyRange.png", 1, 1);
+				break;
+			case 14:
 				this.spritesheet = new SpriteSheet("ButtonBuyAction.png", 1, 1);
 				break;
 		}

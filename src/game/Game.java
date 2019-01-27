@@ -270,15 +270,25 @@ public class Game {
 							case 6:
 								buttons.add(new Button(40, 134, 64, 32, 7));
 								buttons.add(new Button(10, 180, 128, 64, 8));
-								buttons.add(new Button(10, 258, 128, 64, 9));
-								buttons.add(new Button(10, 336, 128, 64, 10));
-								buttons.add(new Button(10, 414, 128, 64, 11));
-								buttons.add(new Button(10, 492, 128, 64, 12));
+								
+								if (player.ram) {
+									buttons.add(new Button(10, 258, 128, 64, 10));
+								} else {
+									buttons.add(new Button(10, 258, 128, 64, 9));
+								}
+								
+								if (player.mines) {
+									buttons.add(new Button(10, 336, 128, 64, 12));
+								} else {
+									buttons.add(new Button(10, 336, 128, 64, 11));
+								}
+								buttons.add(new Button(10, 414, 128, 64, 13));
+								buttons.add(new Button(10, 492, 128, 64, 14));
 								buttons.remove(i);
 								break;
 							case 7:
 								for (int j=buttons.size()-1; j>=0; j--) {
-									if (buttons.get(j).onClick == 8 || buttons.get(j).onClick == 9 || buttons.get(j).onClick == 10) {
+									if (buttons.get(j).onClick > 7 && buttons.get(j).onClick < 15) {
 										buttons.remove(j);
 										
 										if (j < i) {
@@ -303,7 +313,7 @@ public class Game {
 									buttons.remove(i);
 								}
 								break;
-							case 10:
+							case 11:
 								if (player.gold >= mineCost) {
 									player.gold -= mineCost;
 									
@@ -322,13 +332,13 @@ public class Game {
 									buttons.remove(i);
 								}
 								break;
-							case 11:
+							case 13:
 								if (player.gold >= rangeCost) {
 									player.gold -= rangeCost;
 									player.damage += 1;
 								}
 								break;
-							case 12:
+							case 14:
 								if (player.gold >= actionCost) {
 									player.gold -= actionCost;
 									player.actions += 1;

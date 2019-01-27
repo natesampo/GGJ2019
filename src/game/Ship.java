@@ -37,6 +37,7 @@ public class Ship extends GameObject {
 		this.hpbarsmall = new SpriteSheet("hp_bar_small.png", 1, 1);
 		if(type==0) {
 			this.z = 3;
+			this.health = playerhp;
 			this.actions = 2;
 			this.actionsLeft = this.actions;
 		}
