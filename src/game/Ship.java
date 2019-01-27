@@ -5,7 +5,7 @@ import java.awt.Graphics;
 public class Ship extends GameObject {
 	public int heading, type;
 	public double bounceX = 0, bounceY = 0;
-	public int health, actions, actionsLeft, gold, damage;
+	public int health, actions, actionsLeft, gold, damage, range;
 	public boolean portLoaded, starboardLoaded, mines, ram;
 	public SpriteSheet actionbar, hpbarsmall;
 	static int playerhp = 5;
@@ -31,6 +31,7 @@ public class Ship extends GameObject {
 		this.damage = 1;
 		this.mines = false;
 		this.ram = false;
+		this.range = 4;
 		this.actionsLeft = this.actions;
 		this.actionbar = new SpriteSheet("hp_bar_rect.png", 1, 1);
 		this.hpbarsmall = new SpriteSheet("hp_bar_small.png", 1, 1);

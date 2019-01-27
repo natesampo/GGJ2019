@@ -552,7 +552,7 @@ public class Game {
 				g.translate((int)(player.xreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.XOFFSET, (int)(player.yreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.YOFFSET);
 				
 				if (player.heading == 0) {
-					for (int i=0; i<=player.y-2; i++) {
+					for (int i=0; i<=Math.min(player.range-1, player.y-2); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
 						g.fillRect(-GameObject.XOFFSET, -16 - GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
 						
@@ -561,7 +561,7 @@ public class Game {
 						}
 					}
 				} else if (player.heading == 90) {
-					for (int i=0; i<=player.x-1; i++) {
+					for (int i=0; i<=Math.min(player.range-1, player.x-1); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
 						g.fillRect(-GameObject.XOFFSET - GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
 						
@@ -570,7 +570,7 @@ public class Game {
 						}
 					}
 				} else if (player.heading == 180) {
-					for (int i=0; i<=H-player.y-2; i++) {
+					for (int i=0; i<=Math.min(player.range-1, H-player.y-2); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
 						g.fillRect(-GameObject.XOFFSET, -16 + GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
 						
@@ -579,7 +579,7 @@ public class Game {
 						}
 					}
 				} else if (player.heading == 270) {
-					for (int i=0; i<=W-player.x-2; i++) {
+					for (int i=0; i<=Math.min(player.range-1, W-player.x-2); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
 						g.fillRect(-GameObject.XOFFSET + GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
 						
@@ -595,7 +595,7 @@ public class Game {
 				g.translate((int)(player.xreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.XOFFSET, (int)(player.yreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.YOFFSET);
 				
 				if (player.heading == 0) {
-					for (int i=0; i<=H-player.y-2; i++) {
+					for (int i=0; i<=Math.min(player.range-1, H-player.y-2); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
 						g.fillRect(-GameObject.XOFFSET, -16 + GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
 						
@@ -604,7 +604,7 @@ public class Game {
 						}
 					}
 				} else if (player.heading == 90) {
-					for (int i=0; i<=W-player.x-2; i++) {
+					for (int i=0; i<=Math.min(player.range-1, W-player.x-2); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
 						g.fillRect(-GameObject.XOFFSET + GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
 						
@@ -613,7 +613,7 @@ public class Game {
 						}
 					}
 				} else if (player.heading == 180) {
-					for (int i=0; i<=player.y-2; i++) {
+					for (int i=0; i<=Math.min(player.range-1, player.y-2); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
 						g.fillRect(-GameObject.XOFFSET, -16 - GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
 						
@@ -622,7 +622,7 @@ public class Game {
 						}
 					}
 				} else if (player.heading == 270) {
-					for (int i=0; i<=player.x-1; i++) {
+					for (int i=0; i<=Math.min(player.range-1, player.x-1); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
 						g.fillRect(-GameObject.XOFFSET - GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
 						
