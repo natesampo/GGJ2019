@@ -163,6 +163,7 @@ public class Ship extends GameObject {
 		if(health <= 0) {
 			kill = true;
 		}
+		System.out.println("BOOM!!!");
 	}
 	
 	public void translate(int dx, int dy) {

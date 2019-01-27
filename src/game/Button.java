@@ -15,16 +15,16 @@ public class Button {
 		
 		switch(onClick) {
 			case 0:
-				this.spritesheet = new SpriteSheet("ButtonLoadLeftCannon.png", 1, 1);
+				this.spritesheet = new SpriteSheet("ButtonPortLoad.png", 1, 1);
 				break;
 			case 1:
-				this.spritesheet = new SpriteSheet("ButtonFireLeftCannon.png", 1, 1);
+				this.spritesheet = new SpriteSheet("ButtonPortFire.png", 1, 1);
 				break;
 			case 2:
-				this.spritesheet = new SpriteSheet("ButtonLoadRightCannon.png", 1, 1);
+				this.spritesheet = new SpriteSheet("ButtonStarboardLoad.png", 1, 1);
 				break;
 			case 3:
-				this.spritesheet = new SpriteSheet("ButtonFireRightCannon.png", 1, 1);
+				this.spritesheet = new SpriteSheet("ButtonStarboardFire.png", 1, 1);
 				break;
 		}
 	}
