@@ -31,15 +31,12 @@ public class Ship extends GameObject {
 		this.damage = 1;
 		this.mines = false;
 		this.ram = false;
-		this.range = 4;
+		this.range = 12;
 		this.actionsLeft = this.actions;
 		this.actionbar = new SpriteSheet("hp_bar_rect.png", 1, 1);
 		this.hpbarsmall = new SpriteSheet("hp_bar_small.png", 1, 1);
 		if(type==0) {
 			this.z = 3;
-			this.health = playerhp;
-			this.actions = 2;
-			this.actionsLeft = this.actions;
 		}
 		Game.grid[x][y] = this;
 	}

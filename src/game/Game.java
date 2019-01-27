@@ -184,9 +184,6 @@ public class Game {
 				int mouseX = me.getX();
 				int mouseY = me.getY() - 25;
 				
-				System.out.println("mouseX: " + mouseX);
-				System.out.println("mouseY: " + mouseY);
-				
 				for (int i=buttons.size()-1; i>=0; i--) {
 					Button button = buttons.get(i);
 					if (mouseX > button.x && mouseX < button.x + button.width && mouseY > button.y
@@ -282,6 +279,7 @@ public class Game {
 								} else {
 									buttons.add(new Button(10, 336, 128, 64, 11));
 								}
+								
 								buttons.add(new Button(10, 414, 128, 64, 13));
 								buttons.add(new Button(10, 492, 128, 64, 14));
 								buttons.remove(i);
@@ -310,12 +308,14 @@ public class Game {
 								if (player.gold >= ramCost) {
 									player.gold -= ramCost;
 									player.ram = true;
+									buttons.add(new Button(10, 258, 128, 64, 10));
 									buttons.remove(i);
 								}
 								break;
 							case 11:
 								if (player.gold >= mineCost) {
 									player.gold -= mineCost;
+									player.mines = true;
 									
 									for (int j=0; j<buttons.size(); j++) {
 										if (buttons.get(j).onClick == 4) {
@@ -329,13 +329,14 @@ public class Game {
 									}
 									
 									buttons.add(new Button(1050, 535, 128, 64, 5));
+									buttons.add(new Button(10, 336, 128, 64, 12));
 									buttons.remove(i);
 								}
 								break;
 							case 13:
 								if (player.gold >= rangeCost) {
 									player.gold -= rangeCost;
-									player.damage += 1;
+									player.range += 1;
 								}
 								break;
 							case 14:
@@ -474,7 +475,7 @@ public class Game {
 			GameObject g = sprites.get(i);
 			if(g==null) return;
 			if (g.kill) {
-				if (g instanceof Ship) {
+				if (g instanceof Ship && ((Ship) g).type != 0) {
 					player.gold += ((Ship) g).gold;
 					grid[g.x][g.y] = null;
 					sprites.remove(g);
@@ -665,16 +666,16 @@ public class Game {
 				
 				if (player.heading == 0) {
 					g.setColor(new Color(255, 0, 0, 55));
-					g.fillRect(-GameObject.XOFFSET - GameObject.SCALE, -16, GameObject.SCALE, GameObject.SCALE);
+					g.fillRect(-16 - GameObject.XOFFSET - GameObject.SCALE, -16, GameObject.SCALE, GameObject.SCALE);
 				} else if (player.heading == 90) {
 					g.setColor(new Color(255, 0, 0, 55));
-					g.fillRect(-GameObject.XOFFSET, -16 + GameObject.SCALE, GameObject.SCALE, GameObject.SCALE);
+					g.fillRect(-16 - GameObject.XOFFSET, -16 + GameObject.SCALE, GameObject.SCALE, GameObject.SCALE);
 				} else if (player.heading == 180) {
 					g.setColor(new Color(255, 0, 0, 55));
-					g.fillRect(-GameObject.XOFFSET + GameObject.SCALE, -16, GameObject.SCALE, GameObject.SCALE);
+					g.fillRect(-16 - GameObject.XOFFSET + GameObject.SCALE, -16, GameObject.SCALE, GameObject.SCALE);
 				} else if (player.heading == 270) {
 					g.setColor(new Color(255, 0, 0, 55));
-					g.fillRect(-GameObject.XOFFSET, -16 - GameObject.SCALE, GameObject.SCALE, GameObject.SCALE);
+					g.fillRect(-16 - GameObject.XOFFSET, -16 - GameObject.SCALE, GameObject.SCALE, GameObject.SCALE);
 				}
 				
 				g.translate(-(int)(player.xreal*GameObject.SCALE)-GameObject.SCALE/2-GameObject.XOFFSET, -(int)(player.yreal*GameObject.SCALE)-GameObject.SCALE/2-GameObject.YOFFSET);
@@ -899,16 +900,25 @@ public class Game {
 						sprites.add(new Tile(x, y, 1));
 						break;
 					case 'S':
-						int tempGold = 0;
+						int tempGold = 0, tempRange = 4, tempActions = 2, tempDamage = 1;
 						boolean tempMines = false, tempRam = false;
 						if (player!=null) {
 							tempGold = player.gold;
 							tempMines = player.mines;
 							tempRam = player.ram;
+							tempRange = player.range;
+							tempActions = player.actions;
+							tempDamage = player.damage;
 						}
 						player = new Ship(x, y, 0, 0);
 						player.gold = tempGold;
+						player.range = tempRange;
+						player.actions = tempActions;
+						player.actionsLeft = tempActions;
+						player.health = Ship.playerhp;
+						player.mines = tempMines;
 						player.ram = tempRam;
+						player.damage = tempDamage;
 						sprites.add(player);
 						sprites.add(new Tile(x, y, 1));
 						buttons = new ArrayList<Button>();

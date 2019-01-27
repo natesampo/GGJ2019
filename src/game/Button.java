@@ -57,7 +57,7 @@ public class Button {
 				this.spritesheet = new SpriteSheet("ButtonBuyRange.png", 1, 1);
 				break;
 			case 14:
-				this.spritesheet = new SpriteSheet("ButtonBuyAction.png", 1, 1);
+				this.spritesheet = new SpriteSheet("ButtonBuyActions.png", 1, 1);
 				break;
 		}
 	}
