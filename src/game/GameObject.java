@@ -29,7 +29,8 @@ public abstract class GameObject implements Comparable<GameObject> {
 		BOOM("Fire", 12, 12),
 		ENEMY1("Enemy1", 4, 4),
 		ENEMY2("Enemy2", 4, 4),
-		ENEMY3("Enemy3", 4, 4);
+		ENEMY3("Enemy3", 4, 4),
+		MINE("Mine", 8, 8);
 		
 		public String filename;
 		public int columns;

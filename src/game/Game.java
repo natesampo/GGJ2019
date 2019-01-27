@@ -27,7 +27,7 @@ public class Game {
 
 	private JFrame frame;
 	public Camera camera;
-	public static final String NAME = "Come on and jam";
+	public static final String NAME = "Lost Treasure";
 	public static final int WIDTH = 1200; // window width pixels
 	public static final int HEIGHT = 900; // window height pixels
 	public static final int W = 12; // grid width
@@ -174,7 +174,7 @@ public class Game {
 		long then = System.nanoTime();
 		long now = then;
 		long dt;
-		loadLevel("4.3");
+		loadLevel("2.2");
 		while (isRunning) {
 			now = System.nanoTime();
 			dt = now - then;
@@ -212,10 +212,15 @@ public class Game {
 		dt = camera.update(dt); // dt changes values here based on camera speed
 		for(int i=0; i<sprites.size();i++) {
 			GameObject g = sprites.get(i);
-			if(sprites.get(i).kill) {
-				grid[g.x][g.y] = null;
-				sprites.remove(g);
-				i--;
+			if(g.kill) {
+				if(g instanceof Ship) {
+					grid[g.x][g.y] = null;
+					sprites.remove(g);
+					i--;
+				}
+				if(g instanceof Tile) {
+					sprites.remove(g);
+				}
 			}
 		}
 		Collections.sort(sprites); // Draw in order of y position
