@@ -217,7 +217,7 @@ public class Game {
 		hpbarheart = new SpriteSheet("hp_bar_heart.png", 1, 1);
 		gold = new SpriteSheet("Doubloon.png", 1, 1);
 
-		AudioPlayer music = new AudioPlayer("OpenSource.wav");
+		AudioPlayer music = new AudioPlayer("Broadside.wav");
 		music.play();
 	}
 
@@ -584,6 +584,7 @@ public class Game {
 						player.gold = tempGold;
 						sprites.add(player);
 						sprites.add(new Tile(x, y, 1));
+						buttons = new ArrayList<Button>();
 						buttons.add(new Button(1050, 350, 128, 64, 0));
 						buttons.add(new Button(1050, 425, 128, 64, 2));
 						buttons.add(new Button(1050, 535, 128, 64, 4));
