@@ -32,7 +32,7 @@ public class Game {
 	public int windowWidth;
 	public int windowHeight;
 	public boolean isRunning;
-	public Ship player;
+	public static Ship player;
 
 	public boolean yourTurn = false;
 	public boolean lock = false;

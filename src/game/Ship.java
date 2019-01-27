@@ -6,6 +6,7 @@ public class Ship extends GameObject {
 	public int heading, type;
 	public double bounceX = 0, bounceY = 0;
 	public int health = 1;
+	public int actions = 3;
 	
 	/**
 	 * Creates a new ship. 
@@ -20,6 +21,7 @@ public class Ship extends GameObject {
 		this.type = type;
 		this.z = 2;
 		this.health = type;
+		this.sprite.framerate = 8;
 		if(type==0) {
 			this.z = 3;
 			this.health = 3;
@@ -133,13 +135,13 @@ public class Ship extends GameObject {
 		x += dx;
 		y += dy;
 		if(collide(x, y)) {
+			if(Game.grid[x][y] instanceof Tile) {
+				hit();
+			}
 			bounceX = Math.signum(dx)*0.5;
 			bounceY = Math.signum(dy)*0.5;
 			x -= dx;
 			y -= dy;
-			if(Game.grid[x][y] instanceof Tile) {
-				health--;
-			}
 		}
 		Game.grid[x][y] = this;
 	}
@@ -158,5 +160,21 @@ public class Ship extends GameObject {
 			}
 		}
 		return false;
+	}
+	
+	public void move() {
+		Ship p = Game.player;
+		int dx = p.x-x;
+		int dy = p.y-y;
+		if(dx == 0 && heading%180==0 || dy == 0 && heading%180==90) {
+			shoot();
+			return;
+		}
+		if(Math.abs(dx) < Math.abs(dy)) { // move horizontal
+			if(!collide(x+(int)Math.signum(dx),y)) {
+//				if(dx)
+				return;
+			}
+		}
 	}
 }
