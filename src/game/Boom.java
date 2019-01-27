@@ -7,6 +7,7 @@ import game.GameObject.Animations;
 
 public class Boom extends GameObject {
 
+	public Ship ship;
 	public int heading;
 	public boolean right;
 	public boolean impact = false;
@@ -16,16 +17,18 @@ public class Boom extends GameObject {
 	 * @param heading - heading of ship
 	 * @param right - side of ship
 	 */
-	public Boom(int x, int y, int heading, boolean right) {
-		super(x, y);
-		if(heading==0&&!right || heading==180&&right) {
-			this.z = 1;
+	public Boom(Ship s, int heading, boolean right) {
+		super(s.x, s.y);
+		this.ship = s;
+		if(heading==0&&right || heading==180&&right) {
+			this.z = 4;
 		}
 		else {
-			this.z = 4;
+			this.z = 1;
 		}
 		this.heading = heading;
 		this.right = right;
+		this.sprite.framerate = 16;
 	}
 
 	/**
@@ -39,10 +42,11 @@ public class Boom extends GameObject {
 
 	@Override
 	public void update(Game game, double dt) {
-		if(this.sprite.animate(Animations.BOOM, dt, heading/90)) {
+		this.xreal = ship.xreal;
+		this.yreal = ship.yreal;
+		if(this.sprite.animate(Animations.BOOM, dt, (heading==270?2:0)+(heading/90)%2+((heading/90)%2==0?1:0)*(right?2:0))) {
 			Game.sprites.remove(this);
 		}
-		this.sprite.flipX = false;
-		this.sprite.flipY = false;
+		this.sprite.flipX = heading==0 || (heading%180==90)&&right;
 	}
 }

@@ -1,4 +1,4 @@
-~~~~~~~~~~~~
+~~~~~x~~~~~~
 ~~~~~x~~~~~~
 ~~~~~x~~~E~~
 ~~~~~x~~~~~~
@@ -10,4 +10,4 @@
 ~~~~~~~~~~~~
 ~~~X~~~~~~~~
 ~~~~~~~~~~~~
-A trapped ship and its helpless crew are a welcome sight to gold starved pirates.
+A trapped ship and its helpless crew are a welcome sight to gold-starved pirates.

@@ -1,12 +1,15 @@
 package game;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -21,8 +24,8 @@ public class Game {
 	private JFrame frame;
 	public Camera camera;
 	public static final String NAME = "GAME JAM";
-	public static final int WIDTH = 896; // window width pixels
-	public static final int HEIGHT = 896; // window height pixels
+	public static final int WIDTH = 1200; // window width pixels
+	public static final int HEIGHT = 900; // window height pixels
 	public static final int W = 12; // grid width
 	public static final int H = 12; // grid height
 	public static final int MAX_STEP = 50000000;
@@ -40,9 +43,15 @@ public class Game {
 
 	public int delete_this_variable = 0;
 	public double test_local_time = 0;
-	
+
 	public static ArrayList<GameObject> sprites = new ArrayList<GameObject>();
+
+	public double startBars, loadTime;
+
+	public String levelText = "";
 	
+	public Font font;
+
 	public static void main(String[] args) {
 		Game game = new Game();
 		game.start();
@@ -57,6 +66,7 @@ public class Game {
 		loadAllAnimations();
 		frame = new JFrame(NAME);
 		camera = new Camera();
+		camera.goTo(-WIDTH / 2, -HEIGHT / 2);
 		this.windowWidth = windowWidth;
 		this.windowHeight = windowHeight;
 		frame.setSize(windowWidth, windowHeight);
@@ -77,12 +87,14 @@ public class Game {
 
 			@Override
 			public void keyReleased(KeyEvent ke) {
-				if(keyLock == ke.getKeyCode()) keyLock = 0;
+				if (keyLock == ke.getKeyCode())
+					keyLock = 0;
 			}
 
 			@Override
 			public void keyPressed(KeyEvent ke) {
-				if(yourTurn && keyLock!=ke.getKeyCode()) takeTurn(ke);
+				if (yourTurn && keyLock != ke.getKeyCode())
+					takeTurn(ke);
 				keyLock = ke.getKeyCode();
 			}
 		});
@@ -98,11 +110,24 @@ public class Game {
 	 * Start the timer
 	 */
 	public void start() {
+		
+		//font = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getClassLoader().getResourceAsStream("PiratesBay.ttf").deriveFont(50f);
+		try {
+			font = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getClassLoader().getResourceAsStream("PiratesBay.ttf")).deriveFont(50f);
+		} catch (FontFormatException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		
 		isRunning = true;
 		long then = System.nanoTime();
 		long now = then;
 		long dt;
-		loadLevel("1.1");
+		loadLevel("3.1");
 		while (isRunning) {
 			now = System.nanoTime();
 			dt = now - then;
@@ -125,9 +150,17 @@ public class Game {
 	 *            - elapsed time in seconds
 	 */
 	public void update(double dt) {
+
+		
+		// print(dt);
+
 		if (lock)
 			return;
 		lock = true;
+
+		if (startBars >= 0 && System.currentTimeMillis()- loadTime > 2750) {
+			startBars = startBars - dt * 100;
+		}
 		// Put code for user interface before camera update, so slowdowns
 		// don't affect UI elements.
 		dt = camera.update(dt); // dt changes values here based on camera speed
@@ -180,31 +213,44 @@ public class Game {
 		for (GameObject sprite : sprites) {
 			sprite.draw(g);
 		}
+		// black stuff
+		if (startBars > 0) {
+			g.setColor(Color.DARK_GRAY);
+			g.fillRect(0, (int) startBars - 170 - 17, WIDTH, 170);
+			g.fillRect(0, HEIGHT - (int) startBars, WIDTH, 170);
+
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("Convincing Pirate", Font.PLAIN, 32));
+
+			g.drawString(levelText, 200, HEIGHT - 70);
+		}
+
 		lock = false;
+
 	}
 
 	public void takeTurn(KeyEvent ke) {
-		switch(ke.getKeyCode()) {
-			case KeyEvent.VK_W:
-			case KeyEvent.VK_UP:
-				yourTurn = !player.moveUp();
-				break;
-			case KeyEvent.VK_S:
-			case KeyEvent.VK_DOWN:
-				yourTurn = !player.moveDown();
-				break;
-			case KeyEvent.VK_A:
-			case KeyEvent.VK_LEFT:
-				yourTurn = !player.moveLeft();
-				break;
-			case KeyEvent.VK_D:
-			case KeyEvent.VK_RIGHT:
-				yourTurn = !player.moveRight();
-				break;
-			case KeyEvent.VK_SPACE:
-				yourTurn = false;
-				player.shoot();
-				break;
+		switch (ke.getKeyCode()) {
+		case KeyEvent.VK_W:
+		case KeyEvent.VK_UP:
+			yourTurn = !player.moveUp();
+			break;
+		case KeyEvent.VK_S:
+		case KeyEvent.VK_DOWN:
+			yourTurn = !player.moveDown();
+			break;
+		case KeyEvent.VK_A:
+		case KeyEvent.VK_LEFT:
+			yourTurn = !player.moveLeft();
+			break;
+		case KeyEvent.VK_D:
+		case KeyEvent.VK_RIGHT:
+			yourTurn = !player.moveRight();
+			break;
+		case KeyEvent.VK_SPACE:
+			yourTurn = false;
+			player.shoot();
+			break;
 		}
 	}
 
@@ -218,21 +264,24 @@ public class Game {
 	}
 
 	public void loadLevel(String name) {
+		
+		loadTime = System.currentTimeMillis();
+		
 		try {
 			Scanner in = new Scanner(new FileReader(name + ".txt"));
 			grid = new GameObject[W][H];
 			int y = 0;
-			while (in.hasNext()) {
+			while (in.hasNext() && y< 12) {
 				String s = in.nextLine();
 				for (int x = 0; x < s.length(); x++) {
 					char c = s.charAt(x);
 					switch (c) {
 					case 'E':
-						sprites.add(new Ship(x, y, 0, 1));
+						sprites.add(new Ship(x, y, 90*((int)(Math.random()*4)), 1));
 						sprites.add(new Tile(x, y, 1));
 						break;
 					case 'S':
-						player = new Ship(x, y, 0, 0);
+						player = new Ship(x, y,90*((int)(Math.random()*4)), 0);
 						sprites.add(player);
 						sprites.add(new Tile(x, y, 1));
 						break;
@@ -245,9 +294,11 @@ public class Game {
 						break;
 					case 'X':
 						sprites.add(new Tile(x, y, 3));
+						sprites.add(new Tile(x, y, 1));
 						break;
 					case 'm':
 						sprites.add(new Tile(x, y, 4));
+						sprites.add(new Tile(x, y, 1));
 						break;
 					case '>':
 						sprites.add(new Tile(x, y, 5));
@@ -261,10 +312,31 @@ public class Game {
 					case '/':
 						sprites.add(new Tile(x, y, 8));
 						break;
+					case '_':
+						sprites.add(new Tile(x, y, 9));
+						break;
+					default:
+						//if (levelText == null) {
+						//	levelText = c+ "";
+						//} else {
+						//	levelText = levelText + c;
+						//}
+						break;
 					}
 				}
 				y++;
 			}
+			if(in.hasNext()){
+				 levelText  = in.nextLine();
+				 System.out.println(levelText);
+			}
+			
+			
+			
+			
+			System.out.println(levelText);
+			startBars = 170;
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

@@ -95,4 +95,9 @@ public class Camera {
 	public double get_zoom() {
 		return zoom.get_value();
 	}
+	
+	public void goTo(int x, int y) {
+		x_pos.value = x;
+		y_pos.value = y;
+	}
 }

@@ -5,7 +5,7 @@ import java.awt.Graphics;
 public class Ship extends GameObject {
 	public int heading, type;
 	public double bounceX = 0, bounceY = 0;
-	
+	public int health = 1;
 	
 	/**
 	 * Creates a new ship. 
@@ -19,7 +19,11 @@ public class Ship extends GameObject {
 		this.heading = heading;
 		this.type = type;
 		this.z = 2;
-		if(type==0) this.z = 3;
+		this.health = type;
+		if(type==0) {
+			this.z = 3;
+			this.health = 3;
+		}
 		Game.grid[x][y] = this;
 	}
 
@@ -78,8 +82,8 @@ public class Ship extends GameObject {
 	}
 	
 	public void shoot() {
-		Game.sprites.add(new Boom(x, y, heading, true));
-		Game.sprites.add(new Boom(x, y, heading, false));
+		Game.sprites.add(new Boom(this, heading, true));
+		Game.sprites.add(new Boom(this, heading, false));
 		if(heading%180==90) { // horizontal
 			for(int i=x+1;i<Game.W;i++) {
 				if(getHit(i,y)) break;
@@ -101,7 +105,7 @@ public class Ship extends GameObject {
 		if(Game.grid[x][y] != null) {
 			GameObject obj = Game.grid[x][y];
 			if(obj instanceof Tile) {
-				if(((Tile)obj).type == 2) {
+				if(((Tile)obj).type == 3) {
 					return true;
 				}
 			}
@@ -114,6 +118,11 @@ public class Ship extends GameObject {
 	}
 	
 	public void hit() {
+		health--;
+		if(health <= 0) {
+			Game.sprites.remove(this);
+			Game.grid[x][y] = null;
+		}
 		System.out.println("BOOM!!!");
 	}
 	
@@ -128,6 +137,9 @@ public class Ship extends GameObject {
 			bounceY = Math.signum(dy)*0.5;
 			x -= dx;
 			y -= dy;
+			if(Game.grid[x][y] instanceof Tile) {
+				health--;
+			}
 		}
 		Game.grid[x][y] = this;
 	}
@@ -138,6 +150,7 @@ public class Ship extends GameObject {
 			if(obj instanceof Tile) {
 				switch(((Tile)obj).type) {
 					case 2: return true;
+					case 3: return true;
 				}
 			}
 			if(obj instanceof Ship) {
