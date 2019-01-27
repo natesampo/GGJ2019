@@ -101,52 +101,52 @@ public class Ship extends GameObject {
 		if(heading == 90) {
 			if(side == "starboard") {
 				Game.sprites.add(new Boom(this, heading, false));
-				for(int i=x+1;i<Game.W;i++) {
+				for(int i=x+1;i<Math.min(x+this.range+1, Game.W);i++) {
 					if(getHit(i,y)) break;
 				}
 			}
 			if(side == "port") {
 				Game.sprites.add(new Boom(this, heading, true));
-				for(int i=x-1;i>=0;i--) {
+				for(int i=x-1;i>=Math.max(x-this.range, 0);i--) {
 					if(getHit(i,y)) break;
 				}
 			}
 		} else if(heading == 270) {
 			if(side == "port") {
 				Game.sprites.add(new Boom(this, heading, false));
-				for(int i=x+1;i<Game.W;i++) {
+				for(int i=x+1;i<Math.min(x+this.range+1, Game.W);i++) {
 					if(getHit(i,y)) break;
 				}
 			}
 			if(side == "starboard") {
 				Game.sprites.add(new Boom(this, heading, true));
-				for(int i=x-1;i>=0;i--) {
+				for(int i=x-1;i>=Math.max(x-this.range, 0);i--) {
 					if(getHit(i,y)) break;
 				}
 			}
 		} else if (heading == 0) {
 			if(side == "starboard") {
 				Game.sprites.add(new Boom(this, heading, true));
-				for(int i=y+1;i<Game.H;i++) {
+				for(int i=y+1;i<Math.min(y+this.range+1, Game.H);i++) {
 					if(getHit(x,i)) break;
 				}
 			}
 			if(side == "port") {
 				Game.sprites.add(new Boom(this, heading, false));
-				for(int i=y-1;i>=0;i--) {
+				for(int i=y-1;i>=Math.max(y-this.range, 0);i--) {
 					if(getHit(x,i)) break;
 				}
 			}
 		} else if (heading == 180) {
 			if(side == "port") {
 				Game.sprites.add(new Boom(this, heading, true));
-				for(int i=y+1;i<Game.H;i++) {
+				for(int i=y+1;i<Math.min(y+this.range+1, Game.H);i++) {
 					if(getHit(x,i)) break;
 				}
 			}
 			if(side == "starboard") {
 				Game.sprites.add(new Boom(this, heading, false));
-				for(int i=y-1;i>=0;i--) {
+				for(int i=y-1;i>=Math.max(y-this.range, 0);i--) {
 					if(getHit(x,i)) break;
 				}
 			}

@@ -47,6 +47,12 @@ public class Button {
 			case 10:
 				this.spritesheet = new SpriteSheet("ButtonBuyMines.png", 1, 1);
 				break;
+			case 11:
+				this.spritesheet = new SpriteSheet("ButtonBuyRange.png", 1, 1);
+				break;
+			case 12:
+				this.spritesheet = new SpriteSheet("ButtonBuyAction.png", 1, 1);
+				break;
 		}
 	}
 

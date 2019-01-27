@@ -37,6 +37,8 @@ public class Game {
 	public static final int mineCost = 5;
 	public static final int ramCost = 5;
 	public static final int damageCost = 4;
+	public static final int rangeCost = 2;
+	public static final int actionCost = 5;
 	public int MIN_STEP = 20000000;
 	public int windowWidth;
 	public int windowHeight;
@@ -270,6 +272,8 @@ public class Game {
 								buttons.add(new Button(10, 180, 128, 64, 8));
 								buttons.add(new Button(10, 258, 128, 64, 9));
 								buttons.add(new Button(10, 336, 128, 64, 10));
+								buttons.add(new Button(10, 414, 128, 64, 11));
+								buttons.add(new Button(10, 492, 128, 64, 12));
 								buttons.remove(i);
 								break;
 							case 7:
@@ -316,6 +320,18 @@ public class Game {
 									
 									buttons.add(new Button(1050, 535, 128, 64, 5));
 									buttons.remove(i);
+								}
+								break;
+							case 11:
+								if (player.gold >= rangeCost) {
+									player.gold -= rangeCost;
+									player.damage += 1;
+								}
+								break;
+							case 12:
+								if (player.gold >= actionCost) {
+									player.gold -= actionCost;
+									player.actions += 1;
 								}
 								break;
 						}
@@ -554,7 +570,7 @@ public class Game {
 				if (player.heading == 0) {
 					for (int i=0; i<=Math.min(player.range-1, player.y-2); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
-						g.fillRect(-GameObject.XOFFSET, -16 - GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
+						g.fillRect(-16 - GameObject.XOFFSET, -16 - GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
 						
 						if ((grid[player.x][player.y - i - 1] instanceof Tile && ((Tile) grid[player.x][player.y - i - 1]).type == 3) || (grid[player.x][player.y - i - 1] instanceof Ship)) {
 							break;
@@ -563,7 +579,7 @@ public class Game {
 				} else if (player.heading == 90) {
 					for (int i=0; i<=Math.min(player.range-1, player.x-1); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
-						g.fillRect(-GameObject.XOFFSET - GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
+						g.fillRect(-16 - GameObject.XOFFSET - GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
 						
 						if ((grid[player.x - i - 1][player.y] instanceof Tile && ((Tile) grid[player.x - i - 1][player.y]).type == 3) || (grid[player.x - i - 1][player.y] instanceof Ship)) {
 							break;
@@ -572,7 +588,7 @@ public class Game {
 				} else if (player.heading == 180) {
 					for (int i=0; i<=Math.min(player.range-1, H-player.y-2); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
-						g.fillRect(-GameObject.XOFFSET, -16 + GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
+						g.fillRect(-16 - GameObject.XOFFSET, -16 + GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
 						
 						if ((grid[player.x][player.y + i + 1] instanceof Tile && ((Tile) grid[player.x][player.y + i + 1]).type == 3) || (grid[player.x][player.y + i + 1] instanceof Ship)) {
 							break;
@@ -581,7 +597,7 @@ public class Game {
 				} else if (player.heading == 270) {
 					for (int i=0; i<=Math.min(player.range-1, W-player.x-2); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
-						g.fillRect(-GameObject.XOFFSET + GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
+						g.fillRect(-16 - GameObject.XOFFSET + GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
 						
 						if ((grid[player.x + i + 1][player.y] instanceof Tile && ((Tile) grid[player.x + i + 1][player.y]).type == 3) || (grid[player.x + i + 1][player.y] instanceof Ship)) {
 							break;
@@ -597,7 +613,7 @@ public class Game {
 				if (player.heading == 0) {
 					for (int i=0; i<=Math.min(player.range-1, H-player.y-2); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
-						g.fillRect(-GameObject.XOFFSET, -16 + GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
+						g.fillRect(-16 - GameObject.XOFFSET, -16 + GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
 						
 						if ((grid[player.x][player.y + i + 1] instanceof Tile && ((Tile) grid[player.x][player.y + i + 1]).type == 3) || (grid[player.x][player.y + i + 1] instanceof Ship)) {
 							break;
@@ -606,7 +622,7 @@ public class Game {
 				} else if (player.heading == 90) {
 					for (int i=0; i<=Math.min(player.range-1, W-player.x-2); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
-						g.fillRect(-GameObject.XOFFSET + GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
+						g.fillRect(-16 - GameObject.XOFFSET + GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
 						
 						if ((grid[player.x + i + 1][player.y] instanceof Tile && ((Tile) grid[player.x + i + 1][player.y]).type == 3) || (grid[player.x + i + 1][player.y] instanceof Ship)) {
 							break;
@@ -615,7 +631,7 @@ public class Game {
 				} else if (player.heading == 180) {
 					for (int i=0; i<=Math.min(player.range-1, player.y-2); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
-						g.fillRect(-GameObject.XOFFSET, -16 - GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
+						g.fillRect(-16 - GameObject.XOFFSET, -16 - GameObject.SCALE*(i+1), GameObject.SCALE, GameObject.SCALE);
 						
 						if ((grid[player.x][player.y - i - 1] instanceof Tile && ((Tile) grid[player.x][player.y - i - 1]).type == 3) || (grid[player.x][player.y - i - 1] instanceof Ship)) {
 							break;
@@ -624,7 +640,7 @@ public class Game {
 				} else if (player.heading == 270) {
 					for (int i=0; i<=Math.min(player.range-1, player.x-1); i++) {
 						g.setColor(new Color(255, 0, 0, 55));
-						g.fillRect(-GameObject.XOFFSET - GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
+						g.fillRect(-16 - GameObject.XOFFSET - GameObject.SCALE*(i+1), -16, GameObject.SCALE, GameObject.SCALE);
 						
 						if ((grid[player.x - i - 1][player.y] instanceof Tile && ((Tile) grid[player.x - i - 1][player.y]).type == 3) || (grid[player.x - i - 1][player.y] instanceof Ship)) {
 							break;
@@ -872,19 +888,13 @@ public class Game {
 						break;
 					case 'S':
 						int tempGold = 0;
-						int temphp = Ship.playerhp;
 						boolean tempMines = false, tempRam = false;
 						if (player!=null) {
 							tempGold = player.gold;
 							tempMines = player.mines;
 							tempRam = player.ram;
-							
-							if (player.health > 0) {
-								temphp = player.health;
-							}
 						}
 						player = new Ship(x, y, 0, 0);
-						player.health = temphp;
 						player.gold = tempGold;
 						player.ram = tempRam;
 						sprites.add(player);
