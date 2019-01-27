@@ -549,23 +549,23 @@ public class Game {
 		case 3:
 			return ("1.2");
 		case 4:
-			return ("1.3");
+			return ("1.3");//Blunderbuss Bay
 		case 5:
 			return ("2.1");
 		case 6:
-			return ("2.2");
+			return ("2.2");//Shimmermist Falls
 		case 7:
 			return ("3.1");
 		case 8:
-			return ("3.2");
+			return ("3.2");//Gritborn Straight
 		case 9:
-			return ("3.3");
-		case 10:
 			return ("4.1");
+		case 10:
+			return ("4.3");
 		case 11:
 			return ("4.2");
 		case 12:
-			return ("4.3");
+			return ("3.3");//Coral Abyss
 		default:
 			return ("");
 
