@@ -171,10 +171,39 @@ public class Ship extends GameObject {
 			return;
 		}
 		if(Math.abs(dx) < Math.abs(dy)) { // move horizontal
-			if(!collide(x+(int)Math.signum(dx),y)) {
-//				if(dx)
-				return;
-			}
+			if(tryHorizontalMove(dx)) return;
+			if(tryVerticalMove(dy)) return;
+			if(tryVerticalMove(-dy)) return;
+			if(tryHorizontalMove(-dx)) return;
+		} else {
+			if(tryVerticalMove(dy)) return;
+			if(tryHorizontalMove(dx)) return;
+			if(tryHorizontalMove(-dx)) return;
+			if(tryVerticalMove(-dy)) return;
 		}
+	}
+
+	public boolean tryHorizontalMove(int dx) {
+		if(!(dx>0&&heading==180 || dx<0&&heading==0) && !collide(x+(int)Math.signum(dx),y)) {
+			if(dx>0) {
+				moveRight();
+			} else {
+				moveLeft();
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public boolean tryVerticalMove(int dy) {
+		if(!(dy>0&&heading==90 || dy<0&&heading==270) && !collide(x,y+(int)Math.signum(dy))) {
+			if(dy>0) {
+				moveDown();
+			} else {
+				moveUp();
+			}
+			return true;
+		}
+		return false;
 	}
 }

@@ -231,6 +231,9 @@ public class Game {
 			player.shoot();
 			break;
 		}
+		if(!yourTurn) {
+			theirTurn();
+		}
 	}
 
 	/**
@@ -239,6 +242,15 @@ public class Game {
 	public static void loadAllAnimations() {
 		for (Animations a : Animations.values()) {
 			Sprite.loadAnimation(a);
+		}
+	}
+	
+	public void theirTurn() {
+		for(int i=0; i<sprites.size(); i++) {
+			GameObject g = sprites.get(i);
+			if(g instanceof Ship && !g.equals(player)) {
+				((Ship) g).move();
+			}
 		}
 	}
 
