@@ -40,6 +40,8 @@ public class Tile extends GameObject {
 				this.sprite.animate(Animations.ROCK3, dt);
 			}
 			break;
+		case 4:
+			this.sprite.animate(Animations.MINE, dt);
 		}
 	}
 }

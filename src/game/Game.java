@@ -174,7 +174,7 @@ public class Game {
 		long then = System.nanoTime();
 		long now = then;
 		long dt;
-		loadLevel("4.3");
+		loadLevel("2.2");
 		while (isRunning) {
 			now = System.nanoTime();
 			dt = now - then;
