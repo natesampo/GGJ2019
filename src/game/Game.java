@@ -53,7 +53,7 @@ public class Game {
 	
 	public double startBars, loadTime;
 	public String levelText = "";	
-	public Font font;
+	public Font pirateFont;
 
 	public static void main(String[] args) {
 		Game game = new Game();
@@ -155,13 +155,13 @@ public class Game {
 		
 		//font = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getClassLoader().getResourceAsStream("PiratesBay.ttf").deriveFont(50f);
 		try {
-			font = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getClassLoader().getResourceAsStream("ConvincingPirate.ttf")).deriveFont(50f);
+			pirateFont = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getClassLoader().getResourceAsStream("ConvincingPirate.ttf")).deriveFont(50f);
 		} catch (FontFormatException e1) {
 			// TODO Auto-generated catch block
-			//e1.printStackTrace();
+			e1.printStackTrace();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			//e1.printStackTrace();
+			e1.printStackTrace();
 		}
 
 		
@@ -267,7 +267,7 @@ public class Game {
 			g.fillRect(0, HEIGHT - (int) startBars, WIDTH, 170);
 
 			g.setColor(Color.WHITE);
-			g.setFont(new Font("Convincing Pirate", Font.PLAIN, 32));
+			g.setFont(pirateFont);
 
 			g.drawString(levelText, 200, HEIGHT - 70);
 		}
