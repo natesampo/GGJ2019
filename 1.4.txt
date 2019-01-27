@@ -2,7 +2,7 @@ ____________
 _~~~~~~~~___
 ~~~~~~~~~___
 ~~~~~~~~~~~_
-~~~1~~~~x~~~
+~~~~~~~~x~~~
 ~~~~~~~x~~~~
 ~~~~~~~x~~~~
 ~~~~~~x~~~~~
@@ -10,4 +10,6 @@ _~~~~~~~~___
 ~S~~~~X~~~~2
 ~~~~~~~X~~~~
 ~~~~~~~X~~~~
-Hazards line the shores of Havanna.
+You begin your journey off the coast of Old Haven.
+Easy prey often frequents this port.
+Blunderbuss Bay
