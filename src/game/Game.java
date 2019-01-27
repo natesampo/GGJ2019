@@ -54,6 +54,7 @@ public class Game {
 	public static GameObject[][] grid = new GameObject[W][H];
 	public static int[][] currentGrid = new int[W][H];
 	public MapShip mapShip;
+	public boolean begun = false;
 
 	public int delete_this_variable = 0;
 	public double test_local_time = 0;
@@ -72,8 +73,8 @@ public class Game {
 	public String levelText = "";
 	public String levelText2 = "";
 	public String levelText3 = "";
-	public Font pirateFont, pirateFontBig, pirateFontGold;
-	public SpriteSheet map, background;
+	public Font pirateFont, pirateFontBig, pirateFontGold, pirateFontMed;
+	public SpriteSheet map, background, splash;
 
 	public int progress = 1;
 
@@ -118,6 +119,10 @@ public class Game {
 
 			@Override
 			public void keyPressed(KeyEvent ke) {
+				if(!begun) {
+					begun = true;
+					return;
+				}
 				if (yourTurn && keyLock != ke.getKeyCode())
 					takeTurn(ke);
 				keyLock = ke.getKeyCode();
@@ -367,6 +372,19 @@ public class Game {
 		}
 		
 		try {
+			pirateFontMed = Font
+					.createFont(Font.TRUETYPE_FONT,
+							this.getClass().getClassLoader().getResourceAsStream("ConvincingPirate.ttf"))
+					.deriveFont(50f);
+		} catch (FontFormatException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
 			pirateFontBig = Font
 					.createFont(Font.TRUETYPE_FONT,
 							this.getClass().getClassLoader().getResourceAsStream("ConvincingPirate.ttf"))
@@ -398,6 +416,7 @@ public class Game {
 		long dt;
 		mapShip = new MapShip(waypoints[0][0], waypoints[0][1]);
 		background = new SpriteSheet("background.png", 1, 1);
+		splash = new SpriteSheet("splash_screen.png", 1, 1);
 		loadLevel("1.4");
 		Bar();
 		lock = false;
@@ -423,6 +442,7 @@ public class Game {
 	 *            - elapsed time in seconds
 	 */
 	public void update(double dt) {
+		if(!begun) return;
 
 		// print(dt);
 
@@ -496,6 +516,17 @@ public class Game {
 	 *            - the game's Graphics context
 	 */
 	public void draw(Graphics g) {
+		if(!begun) {
+			if(splash==null) return;
+			g.drawImage(splash.getFrame(0),0,0,WIDTH,HEIGHT,null);
+			if(System.currentTimeMillis()%1000>500) {
+				g.setColor(Color.BLACK);
+				g.setFont(pirateFontMed);
+				g.drawString("Press any key", 20, 60);
+				g.drawString("to begin", 20, 120);
+			}
+			return;
+		}
 		if (lock)
 			return;
 		lock = true;
@@ -907,15 +938,16 @@ public class Game {
 					case '/':
 						sprites.add(new Current(x, y, 270));
 						break;
-					case '_':
-						sprites.add(new Tile(x, y, 9));
-						break;
+//					case '_':
+//						sprites.add(new Tile(x, y, 9));
+//						break;
 					default:
 						// if (levelText == null) {
 						// levelText = c+ "";
 						// } else {
 						// levelText = levelText + c;
 						// }
+						sprites.add(new Tile(x, y, 1));
 						break;
 					}
 				}
