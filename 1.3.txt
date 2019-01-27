@@ -10,4 +10,4 @@ XXXXXX~~~X~~
 ~~S~~X~~~^~~
 ~~~~~X~~~^~~
 ~~~~~~~~~~~~
-#The current ebbs and flows around rough waters.
+The current ebbs and flows around rough waters.

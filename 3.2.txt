@@ -10,4 +10,4 @@
 ~~~S~~~~~~~~
 ~m~~~~~~~~~~
 ~~~~~~~~~~~~
-#The sun shines brightly as fortune offers you an easy score.
+The sun shines brightly as fortune offers you an easy score.
