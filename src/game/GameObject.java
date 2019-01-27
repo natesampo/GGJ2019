@@ -12,7 +12,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 	public double xreal, yreal;
 	public double kspeed = .2, minspeed = .02;
 	static int SCALE = 64;
-	static int XOFFSET = 32, YOFFSET = 64;
+	static int XOFFSET = 32-16, YOFFSET = 64-31;
 	public boolean visible = true;
 	public boolean kill = false;
 	
@@ -32,6 +32,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 		ENEMY3("Enemy3", 4, 4),
 		CURRENT("FlowRight", 8, 8),
 		BOOM2("Boom", 8, 8),
+		MAPSHIP("mapPlayer", 1, 1),
 		MINE("Mine", 8, 8),
 		SHOPKEEP("Human", 6, 6);
 		
