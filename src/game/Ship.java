@@ -122,8 +122,7 @@ public class Ship extends GameObject {
 	public void hit() {
 		health--;
 		if(health <= 0) {
-			Game.sprites.remove(this);
-			Game.grid[x][y] = null;
+			kill = true;
 		}
 		System.out.println("BOOM!!!");
 	}
@@ -163,6 +162,7 @@ public class Ship extends GameObject {
 	}
 	
 	public void move() {
+		if(kill) return;
 		Ship p = Game.player;
 		int dx = p.x-x;
 		int dy = p.y-y;
@@ -184,25 +184,29 @@ public class Ship extends GameObject {
 	}
 
 	public boolean tryHorizontalMove(int dx) {
-		if(!(dx>0&&heading==180 || dx<0&&heading==0) && !collide(x+(int)Math.signum(dx),y)) {
-			if(dx>0) {
-				moveRight();
-			} else {
-				moveLeft();
+		if(!(dx>0&&(heading==180||x==Game.W-1) || dx<0&&(heading==0||x==0))) {
+			if(!collide(x+(int)Math.signum(dx),y)) {
+				if(dx>0) {
+					moveRight();
+				} else {
+					moveLeft();
+				}
+				return true;
 			}
-			return true;
 		}
 		return false;
 	}
 
 	public boolean tryVerticalMove(int dy) {
-		if(!(dy>0&&heading==90 || dy<0&&heading==270) && !collide(x,y+(int)Math.signum(dy))) {
-			if(dy>0) {
-				moveDown();
-			} else {
-				moveUp();
+		if(!(dy>0&&(heading==90||y==Game.H-1) || dy<0&&(heading==270||y==0))) {
+			if(!collide(x,y+(int)Math.signum(dy))) {
+				if(dy>0) {
+					moveDown();
+				} else {
+					moveUp();
+				}
+				return true;
 			}
-			return true;
 		}
 		return false;
 	}

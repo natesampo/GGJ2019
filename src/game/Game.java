@@ -161,6 +161,14 @@ public class Game {
 		// Put code for user interface before camera update, so slowdowns
 		// don't affect UI elements.
 		dt = camera.update(dt); // dt changes values here based on camera speed
+		for(int i=0; i<sprites.size();i++) {
+			GameObject g = sprites.get(i);
+			if(sprites.get(i).kill) {
+				grid[g.x][g.y] = null;
+				sprites.remove(g);
+				i--;
+			}
+		}
 		Collections.sort(sprites); // Draw in order of y position
 		// Update GameObject graphics
 		for (int i = 0; i < sprites.size(); i++) {
