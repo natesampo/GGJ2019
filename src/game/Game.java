@@ -50,9 +50,10 @@ public class Game {
 
 	public static ArrayList<GameObject> sprites = new ArrayList<GameObject>();
 	public static ArrayList<Button> buttons = new ArrayList<Button>();
-	
+
 	public double startBars, loadTime;
 	public String levelText = "";
+	public String levelText2 = "";
 	public Font pirateFont;
 
 	public static void main(String[] args) {
@@ -118,7 +119,8 @@ public class Game {
 				int mouseX = me.getX();
 				int mouseY = me.getY() - 25;
 				for (Button button : buttons) {
-					if (mouseX > button.x && mouseX < button.x + button.width && mouseY > button.y && mouseY < button.y + button.height) {
+					if (mouseX > button.x && mouseX < button.x + button.width && mouseY > button.y
+							&& mouseY < button.y + button.height) {
 						System.out.println("click");
 					}
 				}
@@ -143,7 +145,7 @@ public class Game {
 
 		buttons.add(new Button(1050, 350, 128, 64, 0));
 		buttons.add(new Button(1050, 425, 128, 64, 2));
-		
+
 		AudioPlayer music = new AudioPlayer("OpenSource.wav");
 		music.play();
 	}
@@ -152,10 +154,14 @@ public class Game {
 	 * Start the timer
 	 */
 	public void start() {
-		
-		//font = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getClassLoader().getResourceAsStream("PiratesBay.ttf").deriveFont(50f);
+
+		// font = Font.createFont(Font.TRUETYPE_FONT,
+		// this.getClass().getClassLoader().getResourceAsStream("PiratesBay.ttf").deriveFont(50f);
 		try {
-			pirateFont = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getClassLoader().getResourceAsStream("ConvincingPirate.ttf")).deriveFont(50f);
+			pirateFont = Font
+					.createFont(Font.TRUETYPE_FONT,
+							this.getClass().getClassLoader().getResourceAsStream("ConvincingPirate.ttf"))
+					.deriveFont(30f);
 		} catch (FontFormatException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -164,12 +170,11 @@ public class Game {
 			e1.printStackTrace();
 		}
 
-		
 		isRunning = true;
 		long then = System.nanoTime();
 		long now = then;
 		long dt;
-		loadLevel("3.1");
+		loadLevel("4.3");
 		while (isRunning) {
 			now = System.nanoTime();
 			dt = now - then;
@@ -193,14 +198,13 @@ public class Game {
 	 */
 	public void update(double dt) {
 
-		
 		// print(dt);
 
 		if (lock)
 			return;
 		lock = true;
 
-		if (startBars >= 0 && System.currentTimeMillis()- loadTime > 2750) {
+		if (startBars >= 0 && System.currentTimeMillis() - loadTime > 2750) {
 			startBars = startBars - dt * 100;
 		}
 		// Put code for user interface before camera update, so slowdowns
@@ -266,8 +270,8 @@ public class Game {
 		for (GameObject sprite : sprites) {
 			sprite.draw(g);
 		}
-		
-		g2.scale(1/camera.get_zoom(), 1/camera.get_zoom());
+
+		g2.scale(1 / camera.get_zoom(), 1 / camera.get_zoom());
 		g2.translate((int) -(camera.get_x_pos() + WIDTH / (2 * camera.get_zoom())),
 				(int) -(camera.get_y_pos() + HEIGHT / (2 * camera.get_zoom())));
 
@@ -280,9 +284,10 @@ public class Game {
 			g.setColor(Color.WHITE);
 			g.setFont(pirateFont);
 
-			g.drawString(levelText, 200, HEIGHT - 70);
+			g.drawString(levelText, 130, HEIGHT + 60 - (int)startBars);
+			g.drawString(levelText2, 130, HEIGHT + 100 - (int)startBars);
 		}
-		
+
 		for (Button button : buttons) {
 			button.draw(g);
 		}
@@ -335,24 +340,24 @@ public class Game {
 	}
 
 	public void loadLevel(String name) {
-		
+
 		loadTime = System.currentTimeMillis();
-		
+
 		try {
 			Scanner in = new Scanner(new FileReader(name + ".txt"));
 			grid = new GameObject[W][H];
 			int y = 0;
-			while (in.hasNext() && y< 12) {
+			while (in.hasNext() && y < 12) {
 				String s = in.nextLine();
 				for (int x = 0; x < s.length(); x++) {
 					char c = s.charAt(x);
 					switch (c) {
 					case 'E':
-						sprites.add(new Ship(x, y, 90*((int)(Math.random()*4)), 1));
+						sprites.add(new Ship(x, y, 90 * ((int) (Math.random() * 4)), 1));
 						sprites.add(new Tile(x, y, 1));
 						break;
 					case 'S':
-						player = new Ship(x, y,90*((int)(Math.random()*4)), 0);
+						player = new Ship(x, y, 90 * ((int) (Math.random() * 4)), 0);
 						sprites.add(player);
 						sprites.add(new Tile(x, y, 1));
 						break;
@@ -387,24 +392,22 @@ public class Game {
 						sprites.add(new Tile(x, y, 9));
 						break;
 					default:
-						//if (levelText == null) {
-						//	levelText = c+ "";
-						//} else {
-						//	levelText = levelText + c;
-						//}
+						// if (levelText == null) {
+						// levelText = c+ "";
+						// } else {
+						// levelText = levelText + c;
+						// }
 						break;
 					}
 				}
 				y++;
 			}
-			if(in.hasNext()){
-				 levelText  = in.nextLine();
-				 System.out.println(levelText);
+			if (in.hasNext()) {
+				levelText = in.nextLine();
+				levelText2 = in.nextLine();
+			
 			}
-			
-			
-			
-			
+
 			System.out.println(levelText);
 			startBars = 170;
 

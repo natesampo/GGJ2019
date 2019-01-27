@@ -10,4 +10,5 @@
 ~~~m~~~~~_~~
 ~~~~~~~__~~~
 ~~~~~~~_~~~~
-#After last nights' pillaging, you and your crew drank themselves into oblivion. Upon awaking, you find yourselves surrounded by mercenaries looking to cash in on your bounty. 
+After last nights' pillaging, you and your crew drank themselves into oblivion.
+Upon awaking, you find yourselves surrounded by mercenaries looking to cash in on your bounty. 

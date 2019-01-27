@@ -10,4 +10,4 @@
 S~~~~~~~~~~~
 ~~~~~~~~~~~~
 ~~~~~~~~~~~~
-#A lone cargo ship doesn't recognize you. Their mistake.
+A lone cargo ship doesn't recognize you. Their mistake.

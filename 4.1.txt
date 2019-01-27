@@ -10,4 +10,5 @@ __E___~~___E
 _~~_____XXX_
 _______~~___
 XX_________~
-#Shallow water surrounds your ship. As begins to run aground the enemy arrives.
+Shallow water surrounds your ship.
+As begins to run aground the enemy arrives.
