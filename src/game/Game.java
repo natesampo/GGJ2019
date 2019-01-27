@@ -292,11 +292,12 @@ public class Game {
 			g.drawString(levelText, 130, HEIGHT + 60 - (int)startBars);
 			g.drawString(levelText2, 130, HEIGHT + 100 - (int)startBars);
 		}
-
-		for (Button button : buttons) {
-			button.draw(g);
+		try {
+			for (Button button : buttons) {
+				button.draw(g);
+			}
+		} catch(Exception e) {
 		}
-
 		lock = false;
 	}
 
