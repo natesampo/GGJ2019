@@ -135,6 +135,10 @@ public class Game {
 			public void mousePressed(MouseEvent me) {
 				int mouseX = me.getX();
 				int mouseY = me.getY() - 25;
+				
+				System.out.println("mouseX: " + mouseX);
+				System.out.println("mouseY: " + mouseX);
+				
 				for (int i=buttons.size()-1; i>=0; i--) {
 					Button button = buttons.get(i);
 					if (mouseX > button.x && mouseX < button.x + button.width && mouseY > button.y
@@ -392,8 +396,11 @@ public class Game {
 			button.draw(g);
 		}
 		
-		g.drawImage(hpbar.getFrame(0), 8, 8, null);
-		g.drawImage(gold.getFrame(0), 8, 68, null);
+		try {
+			g.drawImage(hpbar.getFrame(0), 8, 8, null);
+			g.drawImage(gold.getFrame(0), 8, 68, null);
+		} catch (Exception e) {
+		}
 		
 		if (player != null) {
 			for (int i=0; i<player.health; i++) {
