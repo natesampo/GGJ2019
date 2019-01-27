@@ -116,7 +116,7 @@ public class Game {
 			@Override
 			public void mouseClicked(MouseEvent me) {
 				int mouseX = me.getX();
-				int mouseY = me.getY();
+				int mouseY = me.getY() - 25;
 				for (Button button : buttons) {
 					if (mouseX > button.x && mouseX < button.x + button.width && mouseY > button.y && mouseY < button.y + button.height) {
 						System.out.println("click");
@@ -275,9 +275,8 @@ public class Game {
 		for (Button button : buttons) {
 			button.draw(g);
 		}
-		
-		lock = false;
 
+		lock = false;
 	}
 
 	public void takeTurn(KeyEvent ke) {
