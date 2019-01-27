@@ -14,6 +14,7 @@ public abstract class GameObject implements Comparable<GameObject> {
 	static int SCALE = 64;
 	static int XOFFSET = 32, YOFFSET = 64;
 	public boolean visible = true;
+	public boolean kill = false;
 	
 	/**
 	 * Animations that any sprite can display
@@ -21,14 +22,14 @@ public abstract class GameObject implements Comparable<GameObject> {
 	public enum Animations {
 		HYDRA("hydra", 4, 4),
 		WATER("Water", 8, 8),
-		SHIP("Ship", 1, 1),
+		SHIP("Ship", 4, 4),
 		ROCK1("Rock1", 1, 1),
 		ROCK2("Rock2", 1, 1),
 		ROCK3("Rock3", 1, 1),
 		BOOM("Fire", 12, 12),
-		ENEMY1("Enemy1", 1, 1),
-		ENEMY2("Enemy2", 1, 1),
-		ENEMY3("Enemy3", 1, 1);
+		ENEMY1("Enemy1", 4, 4),
+		ENEMY2("Enemy2", 4, 4),
+		ENEMY3("Enemy3", 4, 4);
 		
 		public String filename;
 		public int columns;

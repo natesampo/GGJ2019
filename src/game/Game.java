@@ -38,7 +38,7 @@ public class Game {
 	public int windowWidth;
 	public int windowHeight;
 	public boolean isRunning;
-	public Ship player;
+	public static Ship player;
 
 	public boolean yourTurn = false;
 	public boolean lock = false;
@@ -117,7 +117,7 @@ public class Game {
 			@Override
 			public void mouseClicked(MouseEvent me) {
 				int mouseX = me.getX();
-				int mouseY = me.getY();
+				int mouseY = me.getY() - 25;
 				for (Button button : buttons) {
 					if (mouseX > button.x && mouseX < button.x + button.width && mouseY > button.y
 							&& mouseY < button.y + button.height) {
@@ -210,6 +210,14 @@ public class Game {
 		// Put code for user interface before camera update, so slowdowns
 		// don't affect UI elements.
 		dt = camera.update(dt); // dt changes values here based on camera speed
+		for(int i=0; i<sprites.size();i++) {
+			GameObject g = sprites.get(i);
+			if(sprites.get(i).kill) {
+				grid[g.x][g.y] = null;
+				sprites.remove(g);
+				i--;
+			}
+		}
 		Collections.sort(sprites); // Draw in order of y position
 		// Update GameObject graphics
 		for (int i = 0; i < sprites.size(); i++) {
@@ -282,7 +290,6 @@ public class Game {
 		}
 
 		lock = false;
-
 	}
 
 	public void takeTurn(KeyEvent ke) {
@@ -308,6 +315,9 @@ public class Game {
 			player.shoot();
 			break;
 		}
+		if(!yourTurn) {
+			theirTurn();
+		}
 	}
 
 	/**
@@ -316,6 +326,15 @@ public class Game {
 	public static void loadAllAnimations() {
 		for (Animations a : Animations.values()) {
 			Sprite.loadAnimation(a);
+		}
+	}
+	
+	public void theirTurn() {
+		for(int i=0; i<sprites.size(); i++) {
+			GameObject g = sprites.get(i);
+			if(g instanceof Ship && !g.equals(player)) {
+				((Ship) g).move();
+			}
 		}
 	}
 

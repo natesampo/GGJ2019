@@ -6,6 +6,7 @@ public class Ship extends GameObject {
 	public int heading, type;
 	public double bounceX = 0, bounceY = 0;
 	public int health = 1;
+	public int actions = 3;
 	
 	/**
 	 * Creates a new ship. 
@@ -20,6 +21,7 @@ public class Ship extends GameObject {
 		this.type = type;
 		this.z = 2;
 		this.health = type;
+		this.sprite.framerate = 8;
 		if(type==0) {
 			this.z = 3;
 			this.health = 3;
@@ -120,8 +122,7 @@ public class Ship extends GameObject {
 	public void hit() {
 		health--;
 		if(health <= 0) {
-			Game.sprites.remove(this);
-			Game.grid[x][y] = null;
+			kill = true;
 		}
 		System.out.println("BOOM!!!");
 	}
@@ -133,13 +134,13 @@ public class Ship extends GameObject {
 		x += dx;
 		y += dy;
 		if(collide(x, y)) {
+			if(Game.grid[x][y] instanceof Tile) {
+				hit();
+			}
 			bounceX = Math.signum(dx)*0.5;
 			bounceY = Math.signum(dy)*0.5;
 			x -= dx;
 			y -= dy;
-			if(Game.grid[x][y] instanceof Tile) {
-				health--;
-			}
 		}
 		Game.grid[x][y] = this;
 	}
@@ -154,6 +155,56 @@ public class Ship extends GameObject {
 				}
 			}
 			if(obj instanceof Ship) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void move() {
+		if(kill) return;
+		Ship p = Game.player;
+		int dx = p.x-x;
+		int dy = p.y-y;
+		if(dx == 0 && heading%180==0 || dy == 0 && heading%180==90) {
+			shoot();
+			return;
+		}
+		if(Math.abs(dx) < Math.abs(dy)) { // move horizontal
+			if(tryHorizontalMove(dx)) return;
+			if(tryVerticalMove(dy)) return;
+			if(tryVerticalMove(-dy)) return;
+			if(tryHorizontalMove(-dx)) return;
+		} else {
+			if(tryVerticalMove(dy)) return;
+			if(tryHorizontalMove(dx)) return;
+			if(tryHorizontalMove(-dx)) return;
+			if(tryVerticalMove(-dy)) return;
+		}
+	}
+
+	public boolean tryHorizontalMove(int dx) {
+		if(!(dx>0&&(heading==180||x==Game.W-1) || dx<0&&(heading==0||x==0))) {
+			if(!collide(x+(int)Math.signum(dx),y)) {
+				if(dx>0) {
+					moveRight();
+				} else {
+					moveLeft();
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean tryVerticalMove(int dy) {
+		if(!(dy>0&&(heading==90||y==Game.H-1) || dy<0&&(heading==270||y==0))) {
+			if(!collide(x,y+(int)Math.signum(dy))) {
+				if(dy>0) {
+					moveDown();
+				} else {
+					moveUp();
+				}
 				return true;
 			}
 		}
