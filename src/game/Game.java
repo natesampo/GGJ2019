@@ -352,6 +352,7 @@ public class Game {
 
 		try {
 			Scanner in = new Scanner(new FileReader(name + ".txt"));
+			sprites.clear();
 			grid = new GameObject[W][H];
 			int y = 0;
 			while (in.hasNext() && y < 12) {
@@ -466,5 +467,15 @@ public class Game {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public int enemyCount() {
+		int i = 0;
+		for(GameObject g:sprites) {
+			if(g instanceof Ship && !g.equals(player)) {
+				i++;
+			}
+		}
+		return i;
 	}
 }
