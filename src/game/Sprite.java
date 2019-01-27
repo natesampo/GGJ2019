@@ -57,6 +57,15 @@ public class Sprite {
 			animations.put(a, all);
 			return;
 		}
+		if(name.contains("Current")) {
+			SpriteSheet[] all = new SpriteSheet[4];
+			all[0] = new SpriteSheet(i>0?a.filename:name+"Right.png", a.columns, a.frames);
+			all[1] = new SpriteSheet(i>0?a.filename:name+"Up.png", a.columns, a.frames);
+			all[2] = new SpriteSheet(i>0?a.filename:name+"Left.png", a.columns, a.frames);
+			all[3] = new SpriteSheet(i>0?a.filename:name+"Down.png", a.columns, a.frames);
+			animations.put(a, all);
+			return;
+		}
 		SpriteSheet[] all = new SpriteSheet[1];
 		all[0] = new SpriteSheet(i>0?a.filename:name+".png", a.columns, a.frames);
 		animations.put(a, all);
