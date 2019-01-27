@@ -44,6 +44,7 @@ public class Game {
 	public boolean lock = false;
 	public int keyLock = 0;
 	public static GameObject[][] grid = new GameObject[W][H];
+	public static int[][] currentGrid = new int[W][H];
 
 	public int delete_this_variable = 0;
 	public double test_local_time = 0;
@@ -311,7 +312,7 @@ public class Game {
 	}
 
 	public void takeTurn(KeyEvent ke) {
-		if (player.kill)
+		if (player.kill ||!yourTurn)
 			return;
 		switch (ke.getKeyCode()) {
 		case KeyEvent.VK_W:
@@ -334,6 +335,13 @@ public class Game {
 			yourTurn = false;
 			player.shoot();
 			break;
+		case KeyEvent.VK_P:
+			progress++;
+			loadLevel(getLevel(progress));
+			break;
+		}
+		if(!yourTurn) {
+			player.followCurrent();
 		}
 	}
 
@@ -351,6 +359,7 @@ public class Game {
 			GameObject g = sprites.get(i);
 			if (g instanceof Ship && !g.equals(player)) {
 				((Ship) g).move();
+				((Ship) g).followCurrent();
 			}
 		}
 	}
@@ -363,6 +372,7 @@ public class Game {
 			Scanner in = new Scanner(new FileReader(name + ".txt"));
 			sprites.clear();
 			grid = new GameObject[W][H];
+			currentGrid = new int[W][H];
 			int y = 0;
 			while (in.hasNext() && y < 12) {
 				String s = in.nextLine();
@@ -438,16 +448,16 @@ public class Game {
 						sprites.add(new Tile(x, y, 1));
 						break;
 					case '>':
-						sprites.add(new Tile(x, y, 5));
+						sprites.add(new Current(x, y, 0));
 						break;
 					case '<':
-						sprites.add(new Tile(x, y, 6));
+						sprites.add(new Current(x, y, 180));
 						break;
 					case '^':
-						sprites.add(new Tile(x, y, 7));
+						sprites.add(new Current(x, y, 90));
 						break;
 					case '/':
-						sprites.add(new Tile(x, y, 8));
+						sprites.add(new Current(x, y, 270));
 						break;
 					case '_':
 						sprites.add(new Tile(x, y, 9));

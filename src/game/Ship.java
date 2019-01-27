@@ -149,7 +149,7 @@ public class Ship extends GameObject {
 		}
 		Game.grid[x][y] = this;
 	}
-	
+
 	public boolean collide(int x, int y) {
 		if(Game.grid[x][y]!=null) {
 			GameObject obj = Game.grid[x][y];
@@ -158,6 +158,23 @@ public class Ship extends GameObject {
 					case 2: return true;
 					case 3: return true;
 					case 4: return true;
+				}
+			}
+			if(obj instanceof Ship) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+
+	public boolean collideNoMines(int x, int y) {
+		if(Game.grid[x][y]!=null) {
+			GameObject obj = Game.grid[x][y];
+			if(obj instanceof Tile) {
+				switch(((Tile)obj).type) {
+					case 2: return true;
+					case 3: return true;
 				}
 			}
 			if(obj instanceof Ship) {
@@ -187,10 +204,19 @@ public class Ship extends GameObject {
 			if(tryVerticalMove(-dy)) return;
 		}
 	}
+	
+	public void followCurrent() {
+		switch(Game.currentGrid[x][y]) {
+		case 1: translate(1,0); break;
+		case 2: translate(0,-1); break;
+		case 3: translate(-1,0); break;
+		case 4: translate(0,1); break;
+		}
+	}
 
 	public boolean tryHorizontalMove(int dx) {
 		if(!(dx>0&&(heading==180||x==Game.W-1) || dx<0&&(heading==0||x==0))) {
-			if(!collide(x+(int)Math.signum(dx),y)) {
+			if(!collideNoMines(x+(int)Math.signum(dx),y)) {
 				if(dx>0) {
 					moveRight();
 				} else {
@@ -204,7 +230,7 @@ public class Ship extends GameObject {
 
 	public boolean tryVerticalMove(int dy) {
 		if(!(dy>0&&(heading==90||y==Game.H-1) || dy<0&&(heading==270||y==0))) {
-			if(!collide(x,y+(int)Math.signum(dy))) {
+			if(!collideNoMines(x,y+(int)Math.signum(dy))) {
 				if(dy>0) {
 					moveDown();
 				} else {
