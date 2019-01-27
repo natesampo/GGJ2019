@@ -1,14 +1,14 @@
 ~XXXXxxxxX~~
 ~S~~~~~~~~~~
 ~~~~~~~~~~~~
-~~~~~~~~~~~E
+~~~~~~~~~~~4
 ~/~~~___~~~~
 ~/~~~~__~~~~
 ~/~~~~~~~~~~
 ~/~~~~~~~~__
-Xxxxxxx~~~_~
-E~~~~~~~~~~~
+XXXxxxx~~~_~
+a~~~~~~~~~~~
 ~~~~~~~~~~~~
-E~~~~E~E~E~~
+a~~~~w~w~w~~
 The gritborn straight is a dangerous place.
-A small fleet of marauders lies waiting to ambush you.
+A small fleet of marauders lies waiting to ambush.

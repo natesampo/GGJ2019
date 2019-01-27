@@ -1,13 +1,14 @@
 ~E~~~~~~~~~~
 ~~~~~~~~~~X~
-x~~~~EE~~~~~
+x~~~~qq~~~~~
 ~xXxxxX~x~~~
 ~~~~~~~x~~~~
-~~~~~~x~~E~~
+~~~~~~x~~r~~
 XXmmmm~~~~~~
 _~S_~_~~~~~~
-Xxxxxx~~~~~~
-~~~~~EE~~~~~
+XxxXXx~~~~~~
+~~~~~~ww~~~~
 ~~_~~~~~~~~~
 ~~~~~~~~_~~~
-In the face of death you are reminded of power, gold, and the reason you fight.
+In the face of death you are reminded of power, gold,
+and the reason you fight.

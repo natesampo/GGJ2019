@@ -174,7 +174,7 @@ public class Game {
 		long then = System.nanoTime();
 		long now = then;
 		long dt;
-		loadLevel("2.2");
+		loadLevel("4.3");
 		while (isRunning) {
 			now = System.nanoTime();
 			dt = now - then;
@@ -351,8 +351,49 @@ public class Game {
 				for (int x = 0; x < s.length(); x++) {
 					char c = s.charAt(x);
 					switch (c) {
-					case 'E':
-						sprites.add(new Ship(x, y, 90 * ((int) (Math.random() * 4)), 1));
+					case '1':
+						sprites.add(new Ship(x, y, 0, 1));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case '2':
+						sprites.add(new Ship(x, y,90, 1));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case '3':
+						sprites.add(new Ship(x, y, 180, 1));
+						sprites.add(new Tile(x, y, 1));
+					case '4':
+						sprites.add(new Ship(x, y, 270, 1));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case 'q':
+						sprites.add(new Ship(x, y, 0, 2));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case 'w':
+						sprites.add(new Ship(x, y,90, 2));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case 'e':
+						sprites.add(new Ship(x, y, 180, 2));
+						sprites.add(new Tile(x, y, 1));
+					case 'r':
+						sprites.add(new Ship(x, y, 270, 2));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case 'a':
+						sprites.add(new Ship(x, y, 0, 3));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case 's':
+						sprites.add(new Ship(x, y,90, 3));
+						sprites.add(new Tile(x, y, 1));
+						break;
+					case 'd':
+						sprites.add(new Ship(x, y, 180, 3));
+						sprites.add(new Tile(x, y, 1));
+					case 'f':
+						sprites.add(new Ship(x, y, 270, 3));
 						sprites.add(new Tile(x, y, 1));
 						break;
 					case 'S':
