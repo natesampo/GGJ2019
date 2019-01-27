@@ -11,8 +11,8 @@ public abstract class GameObject implements Comparable<GameObject> {
 	public int x, y, z=1;
 	public double xreal, yreal;
 	public double kspeed = .2, minspeed = .02;
-	public int SCALE = 64;
-	public int XOFFSET = 32, YOFFSET = 64;
+	static int SCALE = 64;
+	static int XOFFSET = 32, YOFFSET = 64;
 	public boolean visible = true;
 	public boolean kill = false;
 	

@@ -1,1 +1,1 @@
-# Look it's is a game
+# Look is game
