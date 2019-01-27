@@ -4,22 +4,24 @@ import game.GameObject.Animations;
 
 public class Tile extends GameObject {
 
-	public int type;
+	public int type, damage;
 	public int rand = 0;
 
 	public Tile(int x, int y, int type) {
 		super(x, y);
 		this.z = 1;
 		this.type = type;
+		this.damage = 0;
 		if (type == 1) {
 			this.z = 0;
 			this.sprite.offset((int)(Math.random()*8));
 		}
 		if (type == 2||type==3||type==4) {
 			Game.grid[x][y] = this;
+			this.damage = 1;
 		}
 		switch(type) {
-		case 3: rand = (int)(Math.random()*2); break;
+			case 3: rand = (int)(Math.random()*2); break;
 		}
 	}
 
