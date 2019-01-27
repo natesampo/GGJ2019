@@ -274,8 +274,6 @@ public class Game {
 		
 		for (Button button : buttons) {
 			button.draw(g);
-			g.setColor(Color.BLUE);
-			g.drawRect(button.x, button.y, button.width, button.height);
 		}
 		
 		lock = false;
