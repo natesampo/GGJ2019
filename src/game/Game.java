@@ -54,7 +54,8 @@ public class Game {
 	public double startBars, loadTime;
 	public String levelText = "";
 	public String levelText2 = "";
-	public Font pirateFont;
+	public String levelText3 = "";
+	public Font pirateFont, pirateFontBig;
 
 	public int progress = 1;
 
@@ -164,6 +165,19 @@ public class Game {
 					.createFont(Font.TRUETYPE_FONT,
 							this.getClass().getClassLoader().getResourceAsStream("ConvincingPirate.ttf"))
 					.deriveFont(26f);
+		} catch (FontFormatException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			pirateFontBig = Font
+					.createFont(Font.TRUETYPE_FONT,
+							this.getClass().getClassLoader().getResourceAsStream("ConvincingPirate.ttf"))
+					.deriveFont(85f);
 		} catch (FontFormatException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -293,6 +307,12 @@ public class Game {
 
 			g.drawString(levelText, 110, HEIGHT + 60 - (int) startBars);
 			g.drawString(levelText2, 110, HEIGHT + 100 - (int) startBars);
+			
+			g.setFont(pirateFontBig);
+
+			g.drawString(levelText3, 110, -62 + (int)startBars);
+
+			
 		}
 		try {
 			for (Button button : buttons) {
@@ -458,8 +478,23 @@ public class Game {
 			if (in.hasNext()) {
 				levelText = in.nextLine();
 			}
+			else
+			{
+				levelText = "";
+			}
 			if (in.hasNext()) {
 				levelText2 = in.nextLine();
+			}
+			else
+			{
+				levelText2 = "";
+			}
+			if (in.hasNext()) {
+				levelText3 = in.nextLine();
+			}
+			else
+			{
+				levelText3 = "";
 			}
 
 			System.out.println(levelText);
@@ -475,13 +510,13 @@ public class Game {
 		switch (lvNum) {
 
 		case 1:
-			return ("1.1");
-		case 2:
-			return ("1.2");
-		case 3:
-			return ("1.3");
-		case 4:
 			return ("1.4");
+		case 2:
+			return ("1.1");
+		case 3:
+			return ("1.2");
+		case 4:
+			return ("1.3");
 		case 5:
 			return ("2.1");
 		case 6:

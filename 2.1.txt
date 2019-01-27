@@ -10,5 +10,6 @@
 >>>>>>>>>>>X
 >x>>>>>>>>xx
 >>>>>>~>>>>x
-You followed a fleeing Caravel to Shimmermist falls.
-The strong rapids threaten to pull both you and your prey over.
+You followed a fleeing Caravel to the edge of the falls.
+The strong waters threaten to pull both you and your prey over.
+Shimmermist Falls
