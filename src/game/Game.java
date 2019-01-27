@@ -22,8 +22,8 @@ public class Game {
 	private JFrame frame;
 	public Camera camera;
 	public static final String NAME = "GAME JAM";
-	public static final int WIDTH = 896; // window width pixels
-	public static final int HEIGHT = 896; // window height pixels
+	public static final int WIDTH = 1200; // window width pixels
+	public static final int HEIGHT = 900; // window height pixels
 	public static final int W = 12; // grid width
 	public static final int H = 12; // grid height
 	public static final int MAX_STEP = 50000000;
@@ -200,7 +200,7 @@ public class Game {
 			g.fillRect(0, HEIGHT - (int) startBars, WIDTH, 170);
 
 			g.setColor(Color.WHITE);
-			g.setFont(new Font("PiratesBay", Font.PLAIN, 32));
+			g.setFont(new Font("ConvincingPirate.tff", Font.PLAIN, 32));
 			g.drawString(levelText, 200, HEIGHT - 70);
 		}
 
@@ -256,11 +256,11 @@ public class Game {
 					char c = s.charAt(x);
 					switch (c) {
 					case 'E':
-						sprites.add(new Ship(x, y, 0, 1));
+						sprites.add(new Ship(x, y, 90*((int)(Math.random()*4)), 1));
 						sprites.add(new Tile(x, y, 1));
 						break;
 					case 'S':
-						player = new Ship(x, y, 0, 0);
+						player = new Ship(x, y,90*((int)(Math.random()*4)), 0);
 						sprites.add(player);
 						sprites.add(new Tile(x, y, 1));
 						break;
