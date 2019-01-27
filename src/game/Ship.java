@@ -5,8 +5,8 @@ import java.awt.Graphics;
 public class Ship extends GameObject {
 	public int heading, type;
 	public double bounceX = 0, bounceY = 0;
-	public int health, actions, actionsLeft, gold;
-	public boolean portLoaded, starboardLoaded;
+	public int health, actions, actionsLeft, gold, damage;
+	public boolean portLoaded, starboardLoaded, mines, ram;
 	public SpriteSheet actionbar, hpbarsmall;
 	static int playerhp = 5;
 	
@@ -28,6 +28,9 @@ public class Ship extends GameObject {
 		this.portLoaded = false;
 		this.starboardLoaded = false;
 		this.actions = 1;
+		this.damage = 1;
+		this.mines = false;
+		this.ram = false;
 		this.actionsLeft = this.actions;
 		this.actionbar = new SpriteSheet("hp_bar_rect.png", 1, 1);
 		this.hpbarsmall = new SpriteSheet("hp_bar_small.png", 1, 1);
@@ -159,15 +162,15 @@ public class Ship extends GameObject {
 				}
 			}
 			if(obj instanceof Ship) {
-				((Ship) obj).hit();
+				((Ship) obj).hit(this.damage);
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public void hit() {
-		health--;
+	public void hit(int dmg) {
+		health -= dmg;
 		Game.sprites.add(new Boom(this));
 		if(health <= 0) {
 			kill = true;
@@ -182,7 +185,7 @@ public class Ship extends GameObject {
 		y += dy;
 		if(collide(x, y)) {
 			if(Game.grid[x][y] instanceof Tile) {
-				hit();
+				hit(((Tile) Game.grid[x][y]).damage);
 				if(((Tile)Game.grid[x][y]).type==4) {
 					Game.grid[x][y].kill = true;
 					Game.grid[x][y] = this;

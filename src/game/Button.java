@@ -27,7 +27,25 @@ public class Button {
 				this.spritesheet = new SpriteSheet("ButtonStarboardFire.png", 1, 1);
 				break;
 			case 4:
+				this.spritesheet = new SpriteSheet("ButtonMineDisabled.png", 1, 1);
+				break;
+			case 5:
 				this.spritesheet = new SpriteSheet("ButtonMine.png", 1, 1);
+				break;
+			case 6:
+				this.spritesheet = new SpriteSheet("ButtonShopOpen.png", 1, 1);
+				break;
+			case 7:
+				this.spritesheet = new SpriteSheet("ButtonShopClose.png", 1, 1);
+				break;
+			case 8:
+				this.spritesheet = new SpriteSheet("ButtonBuyDamage.png", 1, 1);
+				break;
+			case 9:
+				this.spritesheet = new SpriteSheet("ButtonBuyRam.png", 1, 1);
+				break;
+			case 10:
+				this.spritesheet = new SpriteSheet("ButtonBuyMines.png", 1, 1);
 				break;
 		}
 	}

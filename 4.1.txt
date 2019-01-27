@@ -1,15 +1,15 @@
-~~________~_
-~f~_____f_~~
-~___~___~~__
-~X~~S__~__~_
-~_______~~~~
-__w______w__
-~___________
-~~__x______~
-__s___~~___s
-_~~_____XXX_
-_______~~___
-XX_________~
-Shallow water surrounds your ship.
+~~~~~~~~~~~~
+~f~~~m~~~f~~
+~~~~~~~~~~~~
+~X~~S~~~~m~~
+~~~m~~~~~~~~
+~~w~~~~~~w~~
+~~~~~~~~~~~~
+~m~~~x`~~~~m
+~~~~~~~~~~s~
+~~~~~~~~XXX~
+~~m~~~~~~~~~`
+XX~~~~~~~~~~
+Shallow water and mines surrounds your ship.
 As begins to run aground the enemy arrives.
-Coral Abyss
+Gritborn Strait

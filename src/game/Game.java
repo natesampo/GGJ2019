@@ -34,6 +34,9 @@ public class Game {
 	public static final int H = 12; // grid height
 	public static final int MAX_STEP = 50000000;
 	public static final int FRAME_RATE = 12;
+	public static final int mineCost = 5;
+	public static final int ramCost = 5;
+	public static final int damageCost = 4;
 	public int MIN_STEP = 20000000;
 	public int windowWidth;
 	public int windowHeight;
@@ -147,7 +150,7 @@ public class Game {
 							case 3:
 								highlight = "starboard";
 								break;
-							case 4:
+							case 5:
 								highlight = "mine";
 								break;
 						}
@@ -235,7 +238,7 @@ public class Game {
 									}
 								}
 								break;
-							case 4:
+							case 5:
 								if (yourTurn) {								
 									int x = player.x;
 									int y = player.y;
@@ -255,6 +258,59 @@ public class Game {
 										yourTurn = false;
 										player.followCurrent();
 									}
+								}
+								break;
+							case 6:
+								buttons.add(new Button(40, 134, 64, 32, 7));
+								buttons.add(new Button(10, 180, 128, 64, 8));
+								buttons.add(new Button(10, 258, 128, 64, 9));
+								buttons.add(new Button(10, 336, 128, 64, 10));
+								buttons.remove(i);
+								break;
+							case 7:
+								for (int j=buttons.size()-1; j>=0; j--) {
+									if (buttons.get(j).onClick == 8 || buttons.get(j).onClick == 9 || buttons.get(j).onClick == 10) {
+										buttons.remove(j);
+										
+										if (j < i) {
+											i--;
+										}
+									}
+								}
+								
+								buttons.add(new Button(40, 134, 64, 32, 6));
+								buttons.remove(i);
+								break;
+							case 8:
+								if (player.gold >= damageCost) {
+									player.gold -= damageCost;
+									player.damage += 1;
+								}
+								break;
+							case 9:
+								if (player.gold >= ramCost) {
+									player.gold -= ramCost;
+									player.ram = true;
+									buttons.remove(i);
+								}
+								break;
+							case 10:
+								if (player.gold >= mineCost) {
+									player.gold -= mineCost;
+									
+									for (int j=0; j<buttons.size(); j++) {
+										if (buttons.get(j).onClick == 4) {
+											buttons.remove(j);
+											
+											if (j < i) {
+												i--;
+											}
+											break;
+										}
+									}
+									
+									buttons.add(new Button(1050, 535, 128, 64, 5));
+									buttons.remove(i);
 								}
 								break;
 						}
@@ -548,7 +604,7 @@ public class Game {
 				g.translate(-(int)(player.xreal*GameObject.SCALE)-GameObject.SCALE/2-GameObject.XOFFSET, -(int)(player.yreal*GameObject.SCALE)-GameObject.SCALE/2-GameObject.YOFFSET);
 				break;
 			case "mine":
-g.translate((int)(player.xreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.XOFFSET, (int)(player.yreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.YOFFSET);
+				g.translate((int)(player.xreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.XOFFSET, (int)(player.yreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.YOFFSET);
 				
 				if (player.heading == 0) {
 					g.setColor(new Color(255, 0, 0, 55));
@@ -786,8 +842,11 @@ g.translate((int)(player.xreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.X
 					case 'S':
 						int tempGold = 0;
 						int temphp = Ship.playerhp;
+						boolean tempMines = false, tempRam = false;
 						if (player!=null) {
 							tempGold = player.gold;
+							tempMines = player.mines;
+							tempRam = player.ram;
 							
 							if (player.health > 0) {
 								temphp = player.health;
@@ -796,12 +855,20 @@ g.translate((int)(player.xreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.X
 						player = new Ship(x, y, 0, 0);
 						player.health = temphp;
 						player.gold = tempGold;
+						player.ram = tempRam;
 						sprites.add(player);
 						sprites.add(new Tile(x, y, 1));
 						buttons = new ArrayList<Button>();
 						buttons.add(new Button(1050, 350, 128, 64, 0));
 						buttons.add(new Button(1050, 425, 128, 64, 2));
-						buttons.add(new Button(1050, 535, 128, 64, 4));
+						
+						if (tempMines) {
+							buttons.add(new Button(1050, 535, 128, 64, 5));
+						} else {
+							buttons.add(new Button(1050, 535, 128, 64, 4));
+						}
+						
+						buttons.add(new Button(40, 134, 64, 32, 6));
 						break;
 					case '~':
 						sprites.add(new Tile(x, y, 1));
@@ -891,32 +958,32 @@ g.translate((int)(player.xreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.X
 
 		switch (lvNum) {
 
-		case 1:
-			return ("1.4");
-		case 2:
-			return ("1.1");
-		case 3:
-			return ("1.2");
-		case 4:
-			return ("1.3");//Blunderbuss Bay
-		case 5:
-			return ("2.1");
-		case 6:
-			return ("2.2");//Shimmermist Falls
-		case 7:
-			return ("3.1");
-		case 8:
-			return ("3.2");//Gritborn Straight
-		case 9:
-			return ("4.1");
-		case 10:
-			return ("4.3");
-		case 11:
-			return ("4.2");
-		case 12:
-			return ("3.3");//Coral Abyss
-		default:
-			return ("");
+			case 1:
+				return ("1.4");
+			case 2:
+				return ("1.1");
+			case 3:
+				return ("1.2");
+			case 4:
+				return ("1.3");//Blunderbuss Bay
+			case 5:
+				return ("2.1");
+			case 6:
+				return ("2.2");//Shimmermist Falls
+			case 7:
+				return ("3.1");
+			case 8:
+				return ("3.2");//Gritborn Straight
+			case 9:
+				return ("4.1");
+			case 10:
+				return ("4.3");
+			case 11:
+				return ("4.2");
+			case 12:
+				return ("3.3");//Coral Abyss
+			default:
+				return ("");
 
 		}
 	}
