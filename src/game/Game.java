@@ -43,6 +43,7 @@ public class Game {
 	public boolean yourTurn = true;
 	public boolean lock = false;
 	public int keyLock = 0;
+	public int actionsLeft = 0;
 	public static GameObject[][] grid = new GameObject[W][H];
 	public static int[][] currentGrid = new int[W][H];
 
@@ -120,14 +121,6 @@ public class Game {
 
 			@Override
 			public void mouseClicked(MouseEvent me) {
-				int mouseX = me.getX();
-				int mouseY = me.getY() - 25;
-				for (Button button : buttons) {
-					if (mouseX > button.x && mouseX < button.x + button.width && mouseY > button.y
-							&& mouseY < button.y + button.height) {
-						System.out.println("click");
-					}
-				}
 			}
 
 			@Override
@@ -140,6 +133,68 @@ public class Game {
 
 			@Override
 			public void mousePressed(MouseEvent me) {
+				int mouseX = me.getX();
+				int mouseY = me.getY() - 25;
+				for (int i=buttons.size()-1; i>=0; i--) {
+					Button button = buttons.get(i);
+					if (mouseX > button.x && mouseX < button.x + button.width && mouseY > button.y
+							&& mouseY < button.y + button.height) {
+						switch(button.onClick) {
+							case 0:
+								if (yourTurn) {
+									actionsLeft--;
+									player.portLoaded = true;
+									buttons.add(new Button(1050, 350, 128, 64, 1));
+									buttons.remove(i);
+									
+									if(actionsLeft <= 0) {
+										yourTurn = false;
+										player.followCurrent();
+									}
+								}
+								break;
+							case 1:
+								if (yourTurn) {
+									actionsLeft--;
+									player.shoot("port");
+									buttons.add(new Button(1050, 350, 128, 64, 0));
+									buttons.remove(i);
+									
+									if(actionsLeft <= 0) {
+										yourTurn = false;
+										player.followCurrent();
+									}
+								}
+								break;
+							case 2:
+								if (yourTurn) {
+									actionsLeft--;
+									player.starboardLoaded = true;
+									buttons.add(new Button(1050, 425, 128, 64, 3));
+									buttons.remove(i);
+									
+									if(actionsLeft <= 0) {
+										yourTurn = false;
+										player.followCurrent();
+									}
+								}
+								break;
+							case 3:
+								if (yourTurn) {
+									actionsLeft--;
+									player.shoot("starboard");
+									buttons.add(new Button(1050, 425, 128, 64, 2));
+									buttons.remove(i);
+									
+									if(actionsLeft <= 0) {
+										yourTurn = false;
+										player.followCurrent();
+									}
+								}
+								break;
+						}
+					}
+				}
 			}
 
 			@Override
@@ -249,6 +304,7 @@ public class Game {
 		}
 		if (!yourTurn) {
 			theirTurn();
+			actionsLeft = player.actions;
 			yourTurn = true;
 		}
 		// Change level
@@ -337,32 +393,41 @@ public class Game {
 		if (player.kill ||!yourTurn)
 			return;
 		switch (ke.getKeyCode()) {
-		case KeyEvent.VK_W:
-		case KeyEvent.VK_UP:
-			yourTurn = !player.moveUp();
-			break;
-		case KeyEvent.VK_S:
-		case KeyEvent.VK_DOWN:
-			yourTurn = !player.moveDown();
-			break;
-		case KeyEvent.VK_A:
-		case KeyEvent.VK_LEFT:
-			yourTurn = !player.moveLeft();
-			break;
-		case KeyEvent.VK_D:
-		case KeyEvent.VK_RIGHT:
-			yourTurn = !player.moveRight();
-			break;
-		case KeyEvent.VK_SPACE:
-			yourTurn = false;
-			player.shoot();
-			break;
-		case KeyEvent.VK_P:
-			progress++;
-			loadLevel(getLevel(progress));
-			break;
+			case KeyEvent.VK_W:
+			case KeyEvent.VK_UP:
+				if (player.moveUp()) actionsLeft--;
+				break;
+			case KeyEvent.VK_S:
+			case KeyEvent.VK_DOWN:
+				if (player.moveDown()) actionsLeft--;
+				break;
+			case KeyEvent.VK_A:
+			case KeyEvent.VK_LEFT:
+				if (player.moveLeft()) actionsLeft--;
+				break;
+			case KeyEvent.VK_D:
+			case KeyEvent.VK_RIGHT:
+				if (player.moveRight()) actionsLeft--;
+				break;
+			case KeyEvent.VK_SPACE:
+				if (player.portLoaded) {
+					actionsLeft--;
+					player.shoot("port");
+					player.portLoaded = false;
+				}
+				if (player.starboardLoaded) {
+					actionsLeft--;
+					player.shoot("starboard");
+					player.starboardLoaded = false;
+				}
+				break;
+			case KeyEvent.VK_P:
+				progress++;
+				loadLevel(getLevel(progress));
+				break;
 		}
-		if(!yourTurn) {
+		if(actionsLeft <= 0) {
+			yourTurn = false;
 			player.followCurrent();
 		}
 	}
@@ -380,7 +445,9 @@ public class Game {
 		for (int i = 0; i < sprites.size(); i++) {
 			GameObject g = sprites.get(i);
 			if (g instanceof Ship && !g.equals(player)) {
-				((Ship) g).move();
+				for (int j = 0; j < ((Ship) g).actions; j++) {
+					((Ship) g).move();
+				}
 				((Ship) g).followCurrent();
 			}
 		}
@@ -451,6 +518,7 @@ public class Game {
 						break;
 					case 'S':
 						player = new Ship(x, y, 0, 0);
+						actionsLeft = player.actions;
 						sprites.add(player);
 						sprites.add(new Tile(x, y, 1));
 						break;

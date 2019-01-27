@@ -5,8 +5,8 @@ import java.awt.Graphics;
 public class Ship extends GameObject {
 	public int heading, type;
 	public double bounceX = 0, bounceY = 0;
-	public int health = 1;
-	public int actions = 3;
+	public int health, actions;
+	public boolean portLoaded, starboardLoaded;
 	
 	/**
 	 * Creates a new ship. 
@@ -22,9 +22,12 @@ public class Ship extends GameObject {
 		this.z = 2;
 		this.health = type;
 		this.sprite.framerate = 8;
+		this.portLoaded = false;
+		this.starboardLoaded = false;
+		this.actions = 3;
 		if(type==0) {
 			this.z = 3;
-			this.health = 1;
+			this.health = 5;
 		}
 		Game.grid[x][y] = this;
 	}
@@ -83,22 +86,58 @@ public class Ship extends GameObject {
 		return true;
 	}
 	
-	public void shoot() {
-		Game.sprites.add(new Boom(this, heading, true));
-		Game.sprites.add(new Boom(this, heading, false));
-		if(heading%180==90) { // horizontal
-			for(int i=x+1;i<Game.W;i++) {
-				if(getHit(i,y)) break;
+	public void shoot(String side) {
+		if(heading == 90) {
+			if(side == "starboard") {
+				Game.sprites.add(new Boom(this, heading, false));
+				for(int i=x+1;i<Game.W;i++) {
+					if(getHit(i,y)) break;
+				}
 			}
-			for(int i=x-1;i>=0;i--) {
-				if(getHit(i,y)) break;
+			if(side == "port") {
+				Game.sprites.add(new Boom(this, heading, true));
+				for(int i=x-1;i>=0;i--) {
+					if(getHit(i,y)) break;
+				}
 			}
-		} else { // vertical
-			for(int i=y+1;i<Game.H;i++) {
-				if(getHit(x,i)) break;
+		} else if(heading == 270) {
+			if(side == "port") {
+				Game.sprites.add(new Boom(this, heading, false));
+				for(int i=x+1;i<Game.W;i++) {
+					if(getHit(i,y)) break;
+				}
 			}
-			for(int i=y-1;i>=0;i--) {
-				if(getHit(x,i)) break;
+			if(side == "starboard") {
+				Game.sprites.add(new Boom(this, heading, true));
+				for(int i=x-1;i>=0;i--) {
+					if(getHit(i,y)) break;
+				}
+			}
+		} else if (heading == 0) {
+			if(side == "starboard") {
+				Game.sprites.add(new Boom(this, heading, true));
+				for(int i=y+1;i<Game.H;i++) {
+					if(getHit(x,i)) break;
+				}
+			}
+			if(side == "port") {
+				Game.sprites.add(new Boom(this, heading, false));
+				for(int i=y-1;i>=0;i--) {
+					if(getHit(x,i)) break;
+				}
+			}
+		} else if (heading == 180) {
+			if(side == "port") {
+				Game.sprites.add(new Boom(this, heading, true));
+				for(int i=y+1;i<Game.H;i++) {
+					if(getHit(x,i)) break;
+				}
+			}
+			if(side == "starboard") {
+				Game.sprites.add(new Boom(this, heading, false));
+				for(int i=y-1;i>=0;i--) {
+					if(getHit(x,i)) break;
+				}
 			}
 		}
 	}
@@ -124,7 +163,6 @@ public class Ship extends GameObject {
 		if(health <= 0) {
 			kill = true;
 		}
-		System.out.println("BOOM!!!");
 	}
 	
 	public void translate(int dx, int dy) {
@@ -188,8 +226,11 @@ public class Ship extends GameObject {
 		Ship p = Game.player;
 		int dx = p.x-x;
 		int dy = p.y-y;
-		if(dx == 0 && heading%180==0 || dy == 0 && heading%180==90) {
-			shoot();
+		if((dx == 0 && dy < 0 && heading == 0) || (dx < 0 && dy == 0 && heading == 90) || (dx == 0 && dy > 0 && heading == 180) || (dx > 0 && dy == 0 && heading == 270)) {
+			shoot("port");
+			return;
+		} else if((dx == 0 && dy > 0 && heading == 0) || (dx > 0 && dy == 0 && heading == 90) || (dx == 0 && dy < 0 &&  heading == 180) || (dx < 0 && dy == 0 && heading == 270)) {
+			shoot("starboard");
 			return;
 		}
 		if(Math.abs(dx) < Math.abs(dy)) { // move horizontal
