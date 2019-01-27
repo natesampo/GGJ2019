@@ -48,12 +48,17 @@ public class Game {
 	public int keyLock = 0;
 	public static GameObject[][] grid = new GameObject[W][H];
 	public static int[][] currentGrid = new int[W][H];
+	public MapShip mapShip;
 
 	public int delete_this_variable = 0;
 	public double test_local_time = 0;
 	public float mapAlpha = 1;
 	public double t = 0;
 	public int win = 0;
+	public int[][] waypoints = new int[][]{{150,170},{251,207},{419,215},{575,220},
+		{690,170},{820,150},{882,268},
+		{882,392}, {739,400}, {577, 407}, 
+		{363,430}, {250,530}, {330,664}, {569,639}, {867,652}};
 
 	public static ArrayList<GameObject> sprites = new ArrayList<GameObject>();
 	public static ArrayList<Button> buttons = new ArrayList<Button>();
@@ -63,7 +68,7 @@ public class Game {
 	public String levelText2 = "";
 	public String levelText3 = "";
 	public Font pirateFont, pirateFontBig, pirateFontGold;
-	public SpriteSheet map;
+	public SpriteSheet map, background;
 
 	public int progress = 1;
 
@@ -170,7 +175,7 @@ public class Game {
 				int mouseY = me.getY() - 25;
 				
 				System.out.println("mouseX: " + mouseX);
-				System.out.println("mouseY: " + mouseX);
+				System.out.println("mouseY: " + mouseY);
 				
 				for (int i=buttons.size()-1; i>=0; i--) {
 					Button button = buttons.get(i);
@@ -265,7 +270,6 @@ public class Game {
 		hpbar = new SpriteSheet("hp_bar.png", 1, 1);
 		hpbarheart = new SpriteSheet("hp_bar_heart.png", 1, 1);
 		gold = new SpriteSheet("Doubloon.png", 1, 1);
-
 		AudioPlayer music = new AudioPlayer("Broadside.wav");
 		music.play();
 	}
@@ -320,6 +324,8 @@ public class Game {
 		long then = System.nanoTime();
 		long now = then;
 		long dt;
+		mapShip = new MapShip(waypoints[0][0], waypoints[0][1]);
+		background = new SpriteSheet("background.png", 1, 1);
 		loadLevel("1.4");
 		Bar();
 		lock = false;
@@ -377,6 +383,7 @@ public class Game {
 				}
 			}
 		}
+		mapShip.update(this, dt);
 		Collections.sort(sprites); // Draw in order of y position
 		// Update GameObject graphics
 		for (int i = 0; i < sprites.size(); i++) {
@@ -420,6 +427,7 @@ public class Game {
 		if (lock)
 			return;
 		lock = true;
+		g.drawImage(background.getFrame(0),0,-15,WIDTH,HEIGHT,null);
 		Graphics2D g2 = (Graphics2D) g;
 		long xfoc = (int) (Math.sin(System.nanoTime() / 1000000000.0) * (500)) - 640;
 		long yfoc = (int) (Math.cos(System.nanoTime() / 1500000000.0) * (320)) - 360;
@@ -436,17 +444,17 @@ public class Game {
 		int sq_size = 80;
 		int xs[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 		int ys[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-		for (int x : xs) {
-			for (int y : ys) {
-				if ((x + y) % 2 == 0) {
-					g.setColor(Color.lightGray);
-					g.fillRect(sq_size * x, sq_size * y, sq_size, sq_size);
-				} else {
-					g.setColor(Color.WHITE);
-					g.fillRect(sq_size * x, sq_size * y, sq_size, sq_size);
-				}
-			}
-		}
+//		for (int x : xs) {
+//			for (int y : ys) {
+//				if ((x + y) % 2 == 0) {
+//					g.setColor(Color.lightGray);
+//					g.fillRect(sq_size * x, sq_size * y, sq_size, sq_size);
+//				} else {
+//					g.setColor(Color.WHITE);
+//					g.fillRect(sq_size * x, sq_size * y, sq_size, sq_size);
+//				}
+//			}
+//		}
 		
 		for (GameObject sprite : sprites) {
 			if(sprite!=null && sprite instanceof Tile) sprite.draw(g);
@@ -607,7 +615,7 @@ g.translate((int)(player.xreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.X
 		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,mapAlpha);
 		((Graphics2D) g).setComposite(ac);
 		g.drawImage(map.getFrame(0),0,-15,WIDTH,HEIGHT,null);
-		
+		mapShip.draw(g2);
 		lock = false;
 	}
 
@@ -708,6 +716,9 @@ g.translate((int)(player.xreal*GameObject.SCALE)+GameObject.SCALE/2+GameObject.X
 	}
 
 	public void loadLevel(String name) {
+		mapShip.x = waypoints[progress][0];
+		mapShip.y = waypoints[progress][1];
+		System.out.println(progress);
 		map = new SpriteSheet("Level"+(progress)+"Map.png", 1, 1);
 		mapAlpha = 1;
 		t = 0;
