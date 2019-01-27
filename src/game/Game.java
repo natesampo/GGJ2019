@@ -190,7 +190,8 @@ public class Game {
 		long then = System.nanoTime();
 		long now = then;
 		long dt;
-		loadLevel(getLevel(progress));
+		loadLevel("1.4");
+		Bar();
 		while (isRunning) {
 			now = System.nanoTime();
 			dt = now - then;
@@ -506,11 +507,14 @@ public class Game {
 			}
 
 			System.out.println(levelText);
-			startBars = 170;
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	public void Bar()
+	{
+		startBars = 170;
 	}
 	
 	public int enemyCount() {
