@@ -7,6 +7,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,13 +20,14 @@ import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import game.GameObject;
 import game.GameObject.Animations;
 
 public class Game {
 
 	private JFrame frame;
 	public Camera camera;
-	public static final String NAME = "GAME JAM";
+	public static final String NAME = "Come on and jam";
 	public static final int WIDTH = 1200; // window width pixels
 	public static final int HEIGHT = 900; // window height pixels
 	public static final int W = 12; // grid width
@@ -45,11 +49,10 @@ public class Game {
 	public double test_local_time = 0;
 
 	public static ArrayList<GameObject> sprites = new ArrayList<GameObject>();
-
-	public double startBars, loadTime;
-
-	public String levelText = "";
+	public static ArrayList<Button> buttons = new ArrayList<Button>();
 	
+	public double startBars, loadTime;
+	public String levelText = "";	
 	public Font font;
 
 	public static void main(String[] args) {
@@ -98,9 +101,48 @@ public class Game {
 				keyLock = ke.getKeyCode();
 			}
 		});
+		frame.addMouseMotionListener(new MouseMotionListener() {
 
-		sprites.add(new Button(12, 4, 0));
-		sprites.add(new Button(12, 7, 1));
+			@Override
+			public void mouseDragged(MouseEvent me) {
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent me) {
+			}
+		});
+		frame.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent me) {
+				int mouseX = me.getX();
+				int mouseY = me.getY();
+				for (Button button : buttons) {
+					if (mouseX > button.x && mouseX < button.x + button.width && mouseY > button.y && mouseY < button.y + button.height) {
+						System.out.println("click");
+					}
+				}
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent me) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent me) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent me) {
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent me) {
+			}
+		});
+
+		buttons.add(new Button(1050, 350, 128, 64, 0));
+		buttons.add(new Button(1050, 425, 128, 64, 2));
 		
 		AudioPlayer music = new AudioPlayer("OpenSource.wav");
 		music.play();
@@ -113,13 +155,13 @@ public class Game {
 		
 		//font = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getClassLoader().getResourceAsStream("PiratesBay.ttf").deriveFont(50f);
 		try {
-			font = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getClassLoader().getResourceAsStream("PiratesBay.ttf")).deriveFont(50f);
+			font = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getClassLoader().getResourceAsStream("ConvincingPirate.ttf")).deriveFont(50f);
 		} catch (FontFormatException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			//e1.printStackTrace();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			//e1.printStackTrace();
 		}
 
 		
@@ -187,7 +229,7 @@ public class Game {
 		long xfoc = (int) (Math.sin(System.nanoTime() / 1000000000.0) * (500)) - 640;
 		long yfoc = (int) (Math.cos(System.nanoTime() / 1500000000.0) * (320)) - 360;
 		double zoom = Math.sin(System.nanoTime() / 2500000000.0) * 0.5 + 1.0;
-		xfoc = -WIDTH / 2;
+		xfoc = -WIDTH / 3;
 		yfoc = -HEIGHT / 2;
 		zoom = 1.0;
 		camera.set_target_pos(xfoc, yfoc);
@@ -213,6 +255,11 @@ public class Game {
 		for (GameObject sprite : sprites) {
 			sprite.draw(g);
 		}
+		
+		g2.scale(1/camera.get_zoom(), 1/camera.get_zoom());
+		g2.translate((int) -(camera.get_x_pos() + WIDTH / (2 * camera.get_zoom())),
+				(int) -(camera.get_y_pos() + HEIGHT / (2 * camera.get_zoom())));
+
 		// black stuff
 		if (startBars > 0) {
 			g.setColor(Color.DARK_GRAY);
@@ -224,7 +271,13 @@ public class Game {
 
 			g.drawString(levelText, 200, HEIGHT - 70);
 		}
-
+		
+		for (Button button : buttons) {
+			button.draw(g);
+			g.setColor(Color.BLUE);
+			g.drawRect(button.x, button.y, button.width, button.height);
+		}
+		
 		lock = false;
 
 	}

@@ -17,7 +17,7 @@ public class Sprite {
 	private Image frame;
 	private GameObject.Animations state;
 	private double t;
-	private int offset = 0;
+	public int offset = 0, scaleX = 1, scaleY = 1;
 	public boolean flipX = false, flipY = false;
 	
 	/**
@@ -57,13 +57,6 @@ public class Sprite {
 			animations.put(a, all);
 			return;
 		}
-		if(name.contains("Button")) {
-			SpriteSheet[] all = new SpriteSheet[4];
-			all[0] = new SpriteSheet(i>0?a.filename:name+"LoadLeftCannon.png", a.columns, a.frames);
-			all[1] = new SpriteSheet(i>0?a.filename:name+"LoadRightCannon.png", a.columns, a.frames);
-			all[2] = new SpriteSheet(i>0?a.filename:name+"FireLeftCannon.png", a.columns, a.frames);
-			all[3] = new SpriteSheet(i>0?a.filename:name+"FireRightCannon.png", a.columns, a.frames);
-		}
 		SpriteSheet[] all = new SpriteSheet[1];
 		all[0] = new SpriteSheet(i>0?a.filename:name+".png", a.columns, a.frames);
 		animations.put(a, all);
@@ -87,12 +80,12 @@ public class Sprite {
 		}
 		SpriteSheet[] all = animations.get(state);
 		if(all.length<=index) {
-			System.err.println("Animation index not found: "+state);
+			System.err.println("Animation index not found: "+index);
 			return false;
 		}
 		SpriteSheet animation = all[index];
-		width = animation.width;
-		height = animation.height;
+		width = animation.width*this.scaleX;
+		height = animation.height*this.scaleY;
 		duration = 1.0*animation.frames/framerate;
 		frame = animation.getFrame((int)(t*framerate+offset)%animation.frames);
 		if(t >= duration) {
